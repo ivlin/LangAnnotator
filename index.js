@@ -170,12 +170,12 @@ var processNode = function(currentNode, anchor, sel, selectionLength, styleAttr,
 		var modified = document.createElement("span");
 		modified.setAttribute("class", currentNode.getAttribute("class"))
 		modified.setAttribute("style", currentNode.getAttribute("style"))
-		for (var i=0; i<currentNode.childNodes.length; i++){
-			var processedChildren = processNode(currentNode.childNodes[i], anchor, sel, selectionLength, styleAttr, modifiedNodes);
-			for (var j=0; j<processedChildren.length; j++){
-				modified.appendChild(processedChildren[j]);
+		for (var child of currentNode.childNodes){
+			var processedChildren = processNode(child, anchor, sel, selectionLength, styleAttr, modifiedNodes);
+			for (var processedChild of processedChildren){
+				modified.appendChild(processedChild);
 			}
-			selectionLength -= currentNode.childNodes[i].textContent;
+			selectionLength -= child.textContent;
 		}
 		return [modified];
 	}
