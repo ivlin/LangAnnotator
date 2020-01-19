@@ -56,6 +56,3 @@ class Annotation {
 		return this._selection;
 	}
 }
-
-class Selection {
-}
