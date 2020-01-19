@@ -3,46 +3,12 @@ const TEXT_NODE = 3;
 
 var ANNOTATIONS = []
 
-class Annotation {
-	constructor() {
-		this._groups = []
-	}
-	add(node) {
-		this._groups.push(node);
-	}
-	//MUTATORS
-	set groups(nodes) {
-		this._groups = nodes;
-	}
-	set startIndex(start) {
-		this._start = start;
-	}
-	set endIndex(end) {
-		this._end = end;
-	}
-	set depth(depth) {
-		this._depth = depth;
-	}
-	// ACCESSORS
-	get groups() {
-		return this._groups;
-	}
-	get startIndex() {
-		return this._start;
-	}
-	get endIndex() {
-		return this._end;
-	}
-	get depth() {
-		return this._depth;
-	}
-}
-
 document.getElementById("textbody").addEventListener("mouseup", function(e){
 	mouseUpResponse();
 });
 
 var maxDepth = 0;
+var annotation_id = 1;
 
 function mouseUpResponse() {
 	if (document.getSelection) {    // all browsers, except IE before version 9
@@ -56,6 +22,7 @@ var styleSelection = function(sel) {
 	var anchor = sel.anchorNode;
 
 	var annotation = new Annotation();
+	annotation.id = annotation_id;
 	annotation.startIndex = getTotalOffset(sel.anchorNode, sel.anchorOffset);
 	annotation.endIndex = getTotalOffset(sel.focusNode, sel.focusOffset);
 	
@@ -76,10 +43,9 @@ var styleSelection = function(sel) {
 
 	//reapply event listeners?
 	while (selectionLength > 0){
-		var styledNodes = processNode(currentNode, anchor, sel, selectionLength, styleAttr, newNodes);
+		var styledNodes = processNode(currentNode, anchor, sel, selectionLength, styleAttr, newNodes, annotation.id);
 		if (styledNodes != null) {
 			nextNode = getNext(currentNode);
-
 			for (var i = 0; i < styledNodes.length; i++){
 				styledNodes[i].parentNode = currentNode.parentNode; 
 				currentNode.parentNode.insertBefore(styledNodes[i], currentNode);				
@@ -100,8 +66,10 @@ var styleSelection = function(sel) {
 			break;
 		}
 	}
+	console.log(newNodes);
 	annotation.groups = newNodes;
-
+	console.log(annotation.groups);
+	annotation_id ++;
 	ANNOTATIONS.push(annotation);
 }
 
@@ -158,20 +126,20 @@ var getNext = function(node) {
 	}
 }
 
-var processNode = function(currentNode, anchor, sel, selectionLength, styleAttr, modifiedNodes) {
+var processNode = function(currentNode, anchor, sel, selectionLength, styleAttr, modifiedNodes, id, ancestorClasses) {
 	if (currentNode == null || currentNode.id == "textbody") {
 		console.log("invalid input");
 		return null;
 	}	
 	if (currentNode.nodeType == TEXT_NODE) {
-		return processTextNode(currentNode, anchor, sel, selectionLength, styleAttr, modifiedNodes);
+		return processTextNode(currentNode, anchor, sel, selectionLength, styleAttr, modifiedNodes, id);
 	}
 	else if (currentNode.nodeType == ELEMENT_NODE) {
 		var modified = document.createElement("span");
 		modified.setAttribute("class", currentNode.getAttribute("class"))
 		modified.setAttribute("style", currentNode.getAttribute("style"))
 		for (var child of currentNode.childNodes){
-			var processedChildren = processNode(child, anchor, sel, selectionLength, styleAttr, modifiedNodes);
+			var processedChildren = processNode(child, anchor, sel, selectionLength, styleAttr, modifiedNodes, id, ancestorClasses + currentNode.getAttribute("class").split());
 			for (var processedChild of processedChildren){
 				modified.appendChild(processedChild);
 			}
@@ -183,7 +151,7 @@ var processNode = function(currentNode, anchor, sel, selectionLength, styleAttr,
 	return null;
 }
 
-var processTextNode = function(currentNode, anchor, sel, selectionLength, styleAttr, modifiedNodes) {
+var processTextNode = function(currentNode, anchor, sel, selectionLength, styleAttr, modifiedNodes, id, ancestorClasses) {
 	var start = 0;
 	if (currentNode == anchor) {
 		start = sel.anchorOffset;
@@ -204,11 +172,37 @@ var processTextNode = function(currentNode, anchor, sel, selectionLength, styleA
 	}
 	var modified = document.createElement("span");
 	modified.classList.add("annotated");
+	modified.classList.add(id);
+	loadParentClasses(modified, currentNode, id);
 	modified.setAttribute("style",styleAttr);
 	modified.appendChild(document.createTextNode(currentNode.nodeValue.slice(start, end)));
 	modifiedNodes.push(modified);
+
+	modified.addEventListener("mouseover", function(e){
+		var sameAnnotation = document.getElementsByClassName(""+id);
+		for (var i=0; i<sameAnnotation.length; i++){
+			sameAnnotation[i].style.setProperty('color','blue','important');
+		}
+	});
+	modified.addEventListener("mouseout", function(e){
+		var sameAnnotation = document.getElementsByClassName(id);
+		for (var i=0; i<sameAnnotation.length; i++){
+			sameAnnotation[i].style.color = 'red';
+		}
+	});
+
 	var after = document.createTextNode(currentNode.nodeValue.slice(end));
 	
 	subsections = subsections.concat([modified, after]);
 	return subsections
+}
+
+var loadParentClasses = function(newNode, currentNode, id) {
+	var ancestor = currentNode.parentNode;
+	while (ancestor.id != "textbody"){
+		for (var i=0; i<ancestor.classList.length; i++){
+			newNode.classList.add(ancestor.classList[i]);
+		}
+		ancestor = ancestor.parentNode;
+	}
 }
