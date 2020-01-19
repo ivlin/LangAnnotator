@@ -21,6 +21,15 @@ class Annotation {
 	set depth(depth) {
 		this._depth = depth;
 	}
+	set title(title) {
+		this._title = title;
+	}
+	set description(desc) {
+		this._description = desc;
+	}
+	set selection(sel) {
+		this._selection = sel;
+	}
 	// ACCESSORS
 	get id() {
 		return this._id;
@@ -37,4 +46,16 @@ class Annotation {
 	get depth() {
 		return this._depth;
 	}
+	get title() {
+		return this._title;
+	}
+	get description() {
+		return this._description;
+	}
+	get selection() {
+		return this._selection;
+	}
+}
+
+class Selection {
 }
