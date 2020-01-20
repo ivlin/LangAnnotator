@@ -1,4 +1,7 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+
+import AnnotationModal from './AnnotationModal'
 
 const ELEMENT_NODE = 1;
 const TEXT_NODE = 3;
@@ -66,7 +69,11 @@ export default class MainText extends React.Component {
 	
 	constructor(props) {
 		super(props);
-		this.state = {ANNOTATIONS: [], annotation_id: 1, maxDepth: 0};
+		this.state = {
+			ANNOTATIONS: [], 
+			annotation_id: 1, 
+			maxDepth: 0
+		};
 		this.handleMouseUp = this.handleMouseUp.bind(this);
 	}
 
@@ -79,6 +86,8 @@ export default class MainText extends React.Component {
         	annotation.selection = sel;
         	this.styleSelection(sel, annotation, "textbody");
         	sel.empty();
+
+        	this.render();
   		}
 	}
 
@@ -95,7 +104,7 @@ export default class MainText extends React.Component {
 	
 		var depth = this.getDepthRange(annotation);
 		annotation.depth = depth;
-		this.state.maxDepth = Math.max(this.state.maxDepth, depth);
+		this.setState({maxDepth: Math.max(this.state.maxDepth, depth)});
 	
 		var styleAttr = `color:red; line-height: ${20+(depth-1)}px; padding-bottom: ${4*(depth-1)}px;`;
 		var currentNode = anchor;
@@ -106,15 +115,15 @@ export default class MainText extends React.Component {
 		//reapply event listeners?
 		while (selectionLength > 0){
 			var styledNodes = this.processNode(currentNode, anchor, sel, selectionLength, styleAttr, newNodes, annotation.id, annotation, containerid);
-			if (styledNodes != null) {
+			if (styledNodes !== null) {
 				nextNode = this.getNext(currentNode);
 				for (var i = 0; i < styledNodes.length; i++){
-					console.log(styledNodes[i].parentNode);
 					//styledNodes[i].parentNode = currentNode.parentNode; 
+					//currentNode.parentNode.appendChild(styledNodes[i]);
 					currentNode.parentNode.insertBefore(styledNodes[i], currentNode);				
 				}
 				currentNode.parentNode.removeChild(currentNode);
-				if (currentNode == anchor){
+				if (currentNode === anchor){
 					selectionLength -= currentNode.nodeValue.length - offset;
 				}
 				else {
@@ -127,7 +136,7 @@ export default class MainText extends React.Component {
 			}
 		}
 		annotation.groups = newNodes;
-		this.state.annotation_id ++;
+		this.setState({annotation_id: this.state.annotation_id+1});
 		this.state.ANNOTATIONS.push(annotation);
 	}
 
@@ -141,9 +150,9 @@ export default class MainText extends React.Component {
 				validDepths[previous.depth - 1] = -1;
 			}
 		}
-		for (var i of validDepths){
-			if (i>0) {
-				return i;
+		for (var d of validDepths){
+			if (d>0) {
+				return d;
 			}
 		}	
 		return this.state.maxDepth+1;
@@ -153,10 +162,10 @@ export default class MainText extends React.Component {
 		var escaped = /(\t|\n|\r)+/;
 		var offset = anchorOffset - (anchor.textContent.substring(0,anchorOffset).length - anchor.textContent.substring(0,anchorOffset).replace(escaped,'').length);
 		var node = anchor;
-		while (node != document.getElementById(containerid)) {
-			if (node.previousSibling != null) {
+		while (node !== document.getElementById(containerid)) {
+			if (node.previousSibling !== null) {
 				node = node.previousSibling;
-				offset += node.textContent.replace(escaped,'').	length;
+				offset += node.textContent.replace(escaped,'').length;
 			}
 			else {
 				node = node.parentNode;
@@ -166,10 +175,10 @@ export default class MainText extends React.Component {
 	}
 
 	getNext(node, containerid) {
-		while (node.nextSibling == null && node.parentNode != document.getElementById(containerid)) {
+		while (node.nextSibling === null && node.parentNode !== document.getElementById(containerid)) {
 			node = node.parentNode;
 		}
-		if (node.nextSibling != null) {
+		if (node.nextSibling !== null) {
 			return node.nextSibling;
 		}
 		else {
@@ -178,13 +187,13 @@ export default class MainText extends React.Component {
 	}
 
 	processNode(currentNode, anchor, sel, selectionLength, styleAttr, modifiedNodes, id, annotation, containerid) {
-		if (currentNode == null || currentNode.id == containerid) {
+		if (currentNode === null || currentNode.id === containerid) {
 			return null;
 		}	
-		if (currentNode.nodeType == TEXT_NODE) {
+		if (currentNode.nodeType === TEXT_NODE) {
 			return this.processTextNode(currentNode, anchor, sel, selectionLength, styleAttr, modifiedNodes, id, annotation, containerid);
 		}
-		else if (currentNode.nodeType == ELEMENT_NODE) {
+		else if (currentNode.nodeType === ELEMENT_NODE) {
 			var modified = document.createElement("span");
 			modified.setAttribute("class", currentNode.getAttribute("class"))
 			modified.setAttribute("style", currentNode.getAttribute("style"))
@@ -202,7 +211,7 @@ export default class MainText extends React.Component {
 
 	processTextNode = function(currentNode, anchor, sel, selectionLength, styleAttr, modifiedNodes, id, annotation, containerid) {
 		var start = 0;
-		if (currentNode == anchor) {
+		if (currentNode === anchor) {
 			start = sel.anchorOffset;
 		}
 		var escaped = /(\n|\r|\t)/;
@@ -215,7 +224,7 @@ export default class MainText extends React.Component {
 		}
 
 		var subsections = []
-		if (currentNode == anchor){
+		if (currentNode === anchor){
 			var before = document.createTextNode(currentNode.nodeValue.slice(0, start));
 			subsections.push(before);
 		}
@@ -233,6 +242,7 @@ export default class MainText extends React.Component {
 		modified.addEventListener("click", function(e){
 			window.alert(annotation.description);
 		});
+		
 		modified.addEventListener("mouseover", function(e){
 			var sameAnnotation = document.getElementsByClassName(""+id);
 			for (var i=0; i<sameAnnotation.length; i++){
@@ -254,7 +264,8 @@ export default class MainText extends React.Component {
 
 	loadParentClasses(newNode, currentNode, id, containerid) {
 		var ancestor = currentNode.parentNode;
-		while (ancestor.id != containerid){
+		while (ancestor.id !== containerid){
+			console.log(ancestor);
 			for (var i=0; i<ancestor.classList.length; i++){
 				newNode.classList.add(ancestor.classList[i]);
 			}
@@ -263,8 +274,20 @@ export default class MainText extends React.Component {
 	}
 
 	render() {
-		return 	<div id="textbody" onMouseUp={this.handleMouseUp}>
-			01234 67890123 56 890 2345678 0123 5678 01 3456 8901 345 789012
-		</div>
+		var modals = [];
+		for (var i=0; i<this.state.ANNOTATIONS.length; i++){
+			var current = <AnnotationModal desc={this.state.ANNOTATIONS[i].description}></AnnotationModal>
+			modals.push(current);
+		}
+		return 	(
+			<div>
+				<div id="textbody" onMouseUp={this.handleMouseUp}>
+					01234 67890123 56 890 2345678 0123 5678 01 3456 8901 345 789012
+				</div>
+				<div>
+					{ modals }
+				</div>
+			</div>
+		);
 	}
 }
