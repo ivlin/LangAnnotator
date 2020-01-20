@@ -2,7 +2,7 @@ import React from 'react';
 
 const ELEMENT_NODE = 1;
 const TEXT_NODE = 3;
-
+		
 class Annotation {
 	constructor() {
 		this._groups = []
@@ -223,7 +223,9 @@ export default class MainText extends React.Component {
 		var modified = document.createElement("span");
 		modified.classList.add("annotated");
 		modified.classList.add(id);
+
 		this.loadParentClasses(modified, currentNode, id, containerid);
+
 		modified.setAttribute("style",styleAttr);
 		modified.appendChild(document.createTextNode(currentNode.nodeValue.slice(start, end)));
 		modifiedNodes.push(modified);
@@ -265,6 +267,4 @@ export default class MainText extends React.Component {
 			01234 67890123 56 890 2345678 0123 5678 01 3456 8901 345 789012
 		</div>
 	}
-
-
 }
