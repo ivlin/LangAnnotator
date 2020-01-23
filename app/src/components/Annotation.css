@@ -11,3 +11,16 @@
 .hidden {
 	display: none;
 }
+
+.hover {
+	color: red;
+}
+
+.annotation-btn {
+    background: linear-gradient(0deg, green 1px, white 1px, transparent 1px);
+    background-position: 0 100%;
+}
+
+.annotation-btn:hover {
+	color:red;
+}

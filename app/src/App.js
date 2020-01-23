@@ -1,6 +1,7 @@
 import React from 'react';
 //import logo from './logo.svg';
 
+import MainPage from './components/MainPage';
 import MainText from './components/MainText';
 import AnnotationModal from './components/AnnotationModal';
 
@@ -10,7 +11,7 @@ import './components/textbody.css';
 function App() {
   return (
     <div id="root">
-      <MainText></MainText>
+      <MainPage></MainPage>
     </div>
   );
 }

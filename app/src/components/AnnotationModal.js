@@ -12,6 +12,11 @@ export default class AnnotationModal extends React.Component {
 		this.handleCloseModal = this.handleCloseModal.bind(this);
 	}
 
+	openModal() {
+		console.log("Opening modal");
+		this.setState({isShowing: true});
+	}
+
 	handleOpenModal() {
 		this.setState({isShowing: true})
 	}
@@ -21,12 +26,13 @@ export default class AnnotationModal extends React.Component {
 	}
 
 	render() {
+		console.log("YO WASSUP");
 		let show = this.state.isShowing ? "annotation-modal" : "annotation-modal hidden";
 		return (
 			<div className={show}>
 				Modal content
 				{this.state.description}
-				<button type="button" onClick={this.handleCloseModal}>Close</button>
+				<button type="button" onClick={this.handleOpenModal}>Close</button>
 			</div>
 		);
 	}

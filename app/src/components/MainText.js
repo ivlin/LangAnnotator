@@ -2,16 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import AnnotationModal from './AnnotationModal'
-
-const ELEMENT_NODE = 1;
-const TEXT_NODE = 3;
+import AnnotationButton from './AnnotationButton'
 		
 class Annotation {
 	constructor() {
 		this._groups = []
 	}
-	add(node) {
-		this._groups.push(node);
+	clone(){
+		var clone = new Annotation();
 	}
 	//MUTATORS
 	set id(id) {
@@ -72,7 +70,11 @@ export default class MainText extends React.Component {
 		this.state = {
 			ANNOTATIONS: [], 
 			annotation_id: 1, 
-			maxDepth: 0
+			maxDepth: 0,
+			text: "01234 67890123 56 890 2345678 0123 5678 01 3456 8901 345 789012",
+			annotated_children: ["01234 67890123 56 890 2345678 0123 5678 01 3456 8901 345 789012"],
+			ANNOTATION_BTNS: [],
+			test: ["01234 67890123 56 890 2345678 0123 5678 01 3456 8901 345 789012"]
 		};
 		this.handleMouseUp = this.handleMouseUp.bind(this);
 	}
@@ -86,8 +88,6 @@ export default class MainText extends React.Component {
         	annotation.selection = sel;
         	this.styleSelection(sel, annotation, "textbody");
         	sel.empty();
-
-        	this.render();
   		}
 	}
 
@@ -101,41 +101,28 @@ export default class MainText extends React.Component {
 		annotation.id = this.state.annotation_id;
 		annotation.startIndex = this.getTotalOffset(sel.anchorNode, sel.anchorOffset, containerid);
 		annotation.endIndex = this.getTotalOffset(sel.focusNode, sel.focusOffset, containerid);
-	
+		
 		var depth = this.getDepthRange(annotation);
 		annotation.depth = depth;
 		this.setState({maxDepth: Math.max(this.state.maxDepth, depth)});
 	
-		var styleAttr = `color:red; line-height: ${20+(depth-1)}px; padding-bottom: ${4*(depth-1)}px;`;
-		var currentNode = anchor;
-		var nextNode;
-		var selectionLength = sel.toString().length;	
-		var offset = sel.anchorOffset;
-		var newNodes = [];
-		//reapply event listeners?
-		while (selectionLength > 0){
-			var styledNodes = this.processNode(currentNode, anchor, sel, selectionLength, styleAttr, newNodes, annotation.id, annotation, containerid);
-			if (styledNodes !== null) {
-				nextNode = this.getNext(currentNode);
-				for (var i = 0; i < styledNodes.length; i++){
-					//styledNodes[i].parentNode = currentNode.parentNode; 
-					//currentNode.parentNode.appendChild(styledNodes[i]);
-					currentNode.parentNode.insertBefore(styledNodes[i], currentNode);				
-				}
-				currentNode.parentNode.removeChild(currentNode);
-				if (currentNode === anchor){
-					selectionLength -= currentNode.nodeValue.length - offset;
-				}
-				else {
-					selectionLength -= currentNode.textContent.length;
-				}
-				currentNode = nextNode;
+		//no modification necessary
+		var updatedTest = []//this.processAnnotation(annotation, this.state.test, 0, this.state.text.length);
+		var startInd = 0;
+		var endInd = this.state.text.length;
+		for (var i=0; i<this.state.test.length; i++){
+			if (typeof this.state.test[i] == 'string' || this.state.test[i] instanceof String) {
+				endInd = this.state.test[i].length;
 			}
 			else {
-				break;
+				endInd = this.state.test[i].props.annotation.endIndex;
 			}
+			var x = this.processAnnotation(annotation, this.state.test[i], startInd, endInd);
+			updatedTest=updatedTest.concat(x);
+			startInd = endInd;
 		}
-		annotation.groups = newNodes;
+		
+		this.setState({test: updatedTest});
 		this.setState({annotation_id: this.state.annotation_id+1});
 		this.state.ANNOTATIONS.push(annotation);
 	}
@@ -174,119 +161,57 @@ export default class MainText extends React.Component {
 		return offset;
 	}
 
-	getNext(node, containerid) {
-		while (node.nextSibling === null && node.parentNode !== document.getElementById(containerid)) {
-			node = node.parentNode;
-		}
-		if (node.nextSibling !== null) {
-			return node.nextSibling;
-		}
-		else {
-			return null;
-		}
-	}
+	processAnnotation(new_annotation, prev_annotation, prev_start, prev_end){
+		//intersects
+		if (new_annotation.startIndex < prev_end && prev_start < new_annotation.endIndex) {
+			if (typeof prev_annotation == 'string' || prev_annotation instanceof String){				
+				var startHighlight = new_annotation.startIndex > prev_start ? new_annotation.startIndex - prev_start : 0;
+				var prev_len = prev_end - prev_start;
+				var endHighlight = new_annotation.endIndex > prev_end ? prev_len : prev_len - (prev_end - new_annotation.endIndex);
+				
+				var subAnnotation = new Annotation();
+				subAnnotation.id = new_annotation.id;
+				subAnnotation.depth = new_annotation.depth;
+				subAnnotation.title = new_annotation.title;
+				subAnnotation.description = new_annotation.description;
+				subAnnotation.startIndex = prev_start + startHighlight;
+				subAnnotation.endIndex = prev_start + endHighlight;
+				return [prev_annotation.slice(0,startHighlight),
+						<AnnotationButton key={ parseInt("" + new_annotation.id + prev_start) }  depth={ new_annotation.depth } annotation={ subAnnotation }>
+							{prev_annotation.slice(startHighlight,endHighlight)}
+						</AnnotationButton>, 
+						prev_annotation.slice(endHighlight)]
+			}
 
-	processNode(currentNode, anchor, sel, selectionLength, styleAttr, modifiedNodes, id, annotation, containerid) {
-		if (currentNode === null || currentNode.id === containerid) {
-			return null;
+			var prev_children = prev_annotation.props.children;
+			if (!Array.isArray(prev_children)){
+				prev_children = [prev_children];
+			}
+			var modified_children = [];
+			for (var i=0; i<prev_children.length; i++){
+				prev_end = (typeof prev_children[i] == 'string' || prev_children[i] instanceof String) ? 
+					prev_start + prev_children[i].length : prev_children[i].props.annotation.startIndex;
+
+				modified_children = modified_children.concat(this.processAnnotation(new_annotation, prev_children[i], prev_start, prev_end))
+			
+				prev_start = prev_end;
+			}
+			return [<AnnotationButton key={ parseInt("" + new_annotation.id + prev_start) } depth={ prev_annotation.props.depth } annotation={ prev_annotation.props.annotation }>
+						{ modified_children }
+					</AnnotationButton>];
 		}	
-		if (currentNode.nodeType === TEXT_NODE) {
-			return this.processTextNode(currentNode, anchor, sel, selectionLength, styleAttr, modifiedNodes, id, annotation, containerid);
-		}
-		else if (currentNode.nodeType === ELEMENT_NODE) {
-			var modified = document.createElement("span");
-			modified.setAttribute("class", currentNode.getAttribute("class"))
-			modified.setAttribute("style", currentNode.getAttribute("style"))
-			for (var child of currentNode.childNodes){
-				var processedChildren = this.processNode(child, anchor, sel, selectionLength, styleAttr, modifiedNodes, id, annotation, containerid);
-				for (var processedChild of processedChildren){
-					modified.appendChild(processedChild);
-				}
-				selectionLength -= child.textContent;
-			}
-			return [modified];
-		}
-		return null;
-	}
-
-	processTextNode = function(currentNode, anchor, sel, selectionLength, styleAttr, modifiedNodes, id, annotation, containerid) {
-		var start = 0;
-		if (currentNode === anchor) {
-			start = sel.anchorOffset;
-		}
-		var escaped = /(\n|\r|\t)/;
-		while (escaped.exec(currentNode.nodeValue[start])){
-			start ++;
-		}
-		var end = start + selectionLength;
-		if (end - start > selectionLength) {
-			end = Math.min(start + selectionLength, currentNode.nodeValue.length);
-		}
-
-		var subsections = []
-		if (currentNode === anchor){
-			var before = document.createTextNode(currentNode.nodeValue.slice(0, start));
-			subsections.push(before);
-		}
-
-		var modified = document.createElement("span");
-		modified.classList.add("annotated");
-		modified.classList.add(id);
-
-		this.loadParentClasses(modified, currentNode, id, containerid);
-
-		modified.setAttribute("style",styleAttr);
-		modified.appendChild(document.createTextNode(currentNode.nodeValue.slice(start, end)));
-		modifiedNodes.push(modified);
-
-		modified.addEventListener("click", function(e){
-			window.alert(annotation.description);
-		});
-		
-		modified.addEventListener("mouseover", function(e){
-			var sameAnnotation = document.getElementsByClassName(""+id);
-			for (var i=0; i<sameAnnotation.length; i++){
-				sameAnnotation[i].style.setProperty('color','blue','important');
-			}
-		});
-		modified.addEventListener("mouseout", function(e){
-			var sameAnnotation = document.getElementsByClassName(id);
-			for (var i=0; i<sameAnnotation.length; i++){
-				sameAnnotation[i].style.color = 'red';
-			}
-		});
-
-		var after = document.createTextNode(currentNode.nodeValue.slice(end));
-	
-		subsections = subsections.concat([modified, after]);
-		return subsections
-	}
-
-	loadParentClasses(newNode, currentNode, id, containerid) {
-		var ancestor = currentNode.parentNode;
-		while (ancestor.id !== containerid){
-			console.log(ancestor);
-			for (var i=0; i<ancestor.classList.length; i++){
-				newNode.classList.add(ancestor.classList[i]);
-			}
-			ancestor = ancestor.parentNode;
+		else {
+			return prev_annotation;
 		}
 	}
 
 	render() {
-		var modals = [];
-		for (var i=0; i<this.state.ANNOTATIONS.length; i++){
-			var current = <AnnotationModal desc={this.state.ANNOTATIONS[i].description}></AnnotationModal>
-			modals.push(current);
-		}
-		return 	(
+		return (
 			<div>
 				<div id="textbody" onMouseUp={this.handleMouseUp}>
-					01234 67890123 56 890 2345678 0123 5678 01 3456 8901 345 789012
+					{ this.state.test } 
 				</div>
-				<div>
-					{ modals }
-				</div>
+				
 			</div>
 		);
 	}
