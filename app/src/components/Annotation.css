@@ -12,15 +12,46 @@
 	display: none;
 }
 
-.hover {
-	color: red;
-}
-
 .annotation-btn {
     background: linear-gradient(0deg, green 1px, white 1px, transparent 1px);
     background-position: 0 100%;
 }
 
-.annotation-btn:hover {
-	color:red;
+.modal {
+  position:absolute; 
+  left:50%; 
+  top:50%; 
+  width:50%;
+  height:50%;
+  border-radius: 0.25em;
+  transform: translate(-50%, -50%);
+  background-color: #fafaff;
+  padding: 1em 0.5em;
+}
+
+.modal-bg {
+	position:absolute;
+	left:0;
+	top:0;
+	width:100%;
+	height:100%;
+	background: rgba(16,16,16,0.5);
+}
+
+.modal hr {
+  border:none;
+  background-color: #999;
+  height:1px;
+}
+
+.hidden {
+	display:none;
+}
+
+.color-selector {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 0 5px;
 }

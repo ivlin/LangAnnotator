@@ -26,7 +26,6 @@ export default class AnnotationModal extends React.Component {
 	}
 
 	render() {
-		console.log("YO WASSUP");
 		let show = this.state.isShowing ? "annotation-modal" : "annotation-modal hidden";
 		return (
 			<div className={show}>
