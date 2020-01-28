@@ -185,7 +185,6 @@ var processTextNode = function(currentNode, anchor, sel, selectionLength, styleA
 		window.alert(annotation.description);
 	});
 	modified.addEventListener("mouseover", function(e){
-		console.log(annotation.description);
 		var sameAnnotation = document.getElementsByClassName(""+id);
 		for (var i=0; i<sameAnnotation.length; i++){
 			sameAnnotation[i].style.setProperty('color','blue','important');

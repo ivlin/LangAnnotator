@@ -1,3 +1,7 @@
+html {
+  font-family: 'Roboto', sans-serif;
+}
+
 #textbody{
   font-size: 40px;
   font-family: sans-serif;
@@ -19,4 +23,23 @@
 .three {
     line-height: 28px;
     padding-bottom: 8px;
+}
+
+
+.modal {
+  position:absolute; 
+  left:50%; 
+  top:50%; 
+  width:50%;
+  height:50%;
+  border-radius: 0.25em;
+  transform: translate(-50%, -50%);
+  background-color: #fafaff;
+  padding: 1em 0.5em;
+}
+
+.modal hr {
+  border:none;
+  background-color: #999;
+  height:1px;
 }

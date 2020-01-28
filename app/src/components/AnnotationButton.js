@@ -26,13 +26,14 @@ export default class AnnotationButton extends React.Component {
 	}
 
 	handleHover() {
-		console.log(this.props.annotation.id)
-		console.log(this.props.annotation.color);
+		//console.log(this.props.annotation.id)
+		//console.log(this.props.annotation.color);
 	}
 
 	handleColorChange(c) {
 		this.setState({color: c});
 		this.props.annotation.color = c;
+		this.props.updater(this.props.annotation, c);
 	}
 
 	handleOnShow() {
@@ -50,6 +51,7 @@ export default class AnnotationButton extends React.Component {
 	}
 
 	render() {
+		//console.log("btn rerender")
 		let color_buttons = colors.map((c) => <span onClick={ () => this.handleColorChange(c) } 
 													className="color-selector" 
 													key={c} 
@@ -62,7 +64,7 @@ export default class AnnotationButton extends React.Component {
 					style={ {background: `linear-gradient(0deg, ${this.props.annotation.color}, white 1px, transparent 1px)`,
 							lineHeight: ""+(20+(this.props.depth-1))+"px",
 							paddingBottom: ""+(4*(this.props.depth-1))+"px",
-							color: this.state.color} }>
+							color: this.props.annotation.color} }>
 				{ this.props.children }
 				</span>
 				{ 

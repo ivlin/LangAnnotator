@@ -21,7 +21,6 @@ export default class MainPage extends React.Component {
 	    return (
 	    	<div>
 	    	<MainText text={this.state.test}></MainText>
-	    	<button type="button" onClick={this.handleModifyText}>Modify</button>
 	    	</div>)
 	}
 }
