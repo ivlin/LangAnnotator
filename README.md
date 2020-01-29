@@ -1,5 +1,5 @@
 # LangAnnotator 
-Deployed at [ivlin.github.io/LangAnnotator] (https://ivlin.github.io/LangAnnotator)
+Deployed at [ivlin.github.io/LangAnnotator](https://ivlin.github.io/LangAnnotator)
 
 ## Description 
 
