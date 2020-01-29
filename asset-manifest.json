@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/LangAnnotator/static/css/main.ca3acb98.chunk.css",
-    "main.js": "/LangAnnotator/static/js/main.287b18c5.chunk.js",
-    "main.js.map": "/LangAnnotator/static/js/main.287b18c5.chunk.js.map",
+    "main.css": "/LangAnnotator/static/css/main.ec178d0c.chunk.css",
+    "main.js": "/LangAnnotator/static/js/main.7137b34d.chunk.js",
+    "main.js.map": "/LangAnnotator/static/js/main.7137b34d.chunk.js.map",
     "runtime-main.js": "/LangAnnotator/static/js/runtime-main.db24354b.js",
     "runtime-main.js.map": "/LangAnnotator/static/js/runtime-main.db24354b.js.map",
     "static/js/2.eef5bc31.chunk.js": "/LangAnnotator/static/js/2.eef5bc31.chunk.js",
     "static/js/2.eef5bc31.chunk.js.map": "/LangAnnotator/static/js/2.eef5bc31.chunk.js.map",
     "index.html": "/LangAnnotator/index.html",
-    "precache-manifest.146d350451b01af5b5930de47df61cb2.js": "/LangAnnotator/precache-manifest.146d350451b01af5b5930de47df61cb2.js",
+    "precache-manifest.99c44e3a641b6c5f6fef6e1b8eb8d9a1.js": "/LangAnnotator/precache-manifest.99c44e3a641b6c5f6fef6e1b8eb8d9a1.js",
     "service-worker.js": "/LangAnnotator/service-worker.js",
-    "static/css/main.ca3acb98.chunk.css.map": "/LangAnnotator/static/css/main.ca3acb98.chunk.css.map",
+    "static/css/main.ec178d0c.chunk.css.map": "/LangAnnotator/static/css/main.ec178d0c.chunk.css.map",
     "static/js/2.eef5bc31.chunk.js.LICENSE": "/LangAnnotator/static/js/2.eef5bc31.chunk.js.LICENSE"
   },
   "entrypoints": [
     "static/js/runtime-main.db24354b.js",
     "static/js/2.eef5bc31.chunk.js",
-    "static/css/main.ca3acb98.chunk.css",
-    "static/js/main.287b18c5.chunk.js"
+    "static/css/main.ec178d0c.chunk.css",
+    "static/js/main.7137b34d.chunk.js"
   ]
 }
