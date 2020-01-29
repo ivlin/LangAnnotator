@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaPen } from 'react-icons/fa'
 
 import './Annotation.css'
 
@@ -17,17 +18,18 @@ export default class AnnotationButton extends React.Component {
 		this.state = {
 			isShowing: false,
 			isHighlighted: false,
-			color: this.props.color
+			color: this.props.color,
+			isEditing: false
 		}
 		this.handleOnShow = this.handleOnShow.bind(this);
 		this.handleOnClose = this.handleOnClose.bind(this);
 		this.handleColorChange = this.handleColorChange.bind(this);
 		this.handleHover = this.handleHover.bind(this);
+		this.handleEditMode = this.handleEditMode.bind(this);
+		this.handleViewMode = this.handleViewMode.bind(this);
 	}
 
 	handleHover() {
-		//console.log(this.props.annotation.id)
-		//console.log(this.props.annotation.color);
 	}
 
 	handleColorChange(c) {
@@ -48,6 +50,15 @@ export default class AnnotationButton extends React.Component {
 			this.setState({ isShowing: false });
 		}
 		e.stopPropagation();
+	}
+
+	handleEditMode() {
+		this.setState({ isEditing : !this.state.isEditing });
+	}
+
+	handleViewMode() {
+		this.props.annotation.description = document.getElementById("updatedDescription").value;
+		this.setState({ isEditing : !this.state.isEditing });
 	}
 
 	render() {
@@ -71,11 +82,31 @@ export default class AnnotationButton extends React.Component {
 					this.state.isShowing && 
 					<div className="modal-bg" onClick={ this.handleOnClose } style={ {color: "black"} }>
 						<div className="modal">
+						<div className="modal-inner">
 							<div className="modal-header">
 								{ color_buttons }
 							</div>
 							<hr></hr>
-							{ this.props.annotation.description }
+							{
+								!this.state.isEditing &&
+								<div className="modal-desc">
+									<span className="modal-desc-text">
+										{ this.props.annotation.description }
+									</span>
+									<br></br>
+									<span className="lowOptions" onClick={ this.handleEditMode } size={5}>
+										<FaPen/>
+									</span>	
+								</div>
+							}
+							{
+								this.state.isEditing &&
+								<div className="modal-desc">
+									<textarea id="updatedDescription" defaultValue={ this.props.annotation.description }></textarea>
+									<button type="button" onClick={ this.handleViewMode }>Update Description</button>
+								</div>
+							}
+						</div>
 						</div>
 					</div>
 				}

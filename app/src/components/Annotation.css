@@ -1,3 +1,36 @@
+.menuBar {
+	display: flex;
+}
+
+.menuBar button {
+	border: 0;
+	border-right: solid 1px white;
+	background-color: #233d4d;
+	color: #f7f7f2;
+}
+
+.menuBar span {
+	flex-grow: 1;
+	background-color: #233d4d;
+	color: #f7f7f2;
+	padding: 0 1em;
+}
+
+.sideNav {
+	display: flex;
+	flex-direction: column;
+}
+
+.menuItem {
+	border-bottom: solid 1px #233d4d;
+	background-color: #f7f7f2;
+	color: #233d4d;
+	width: 100%;
+	padding: 0.25em 0.5em;
+	text-decoration: none;
+
+}
+
 .annotation-modal {
 	position:absolute; 
 	left:50%; 
@@ -27,7 +60,7 @@
   border-radius: 0.25em;
   transform: translate(-50%, -50%);
   background-color: #fafaff;
-  padding: 1em 0.5em;
+  padding: 0.5em;
 }
 
 .modal-bg {
@@ -42,6 +75,7 @@
 .modal hr {
   border:none;
   background-color: #999;
+  margin: 0.25em 0;
   height:1px;
 }
 
@@ -72,14 +106,43 @@
   padding: 0.25em 0.5em;
 }
 
+#textbody {
+  padding: 0.25em;
+}
 
+.modal-header {
+	display: flex;
+	justify-content: flex-end;
+}
 
+.modal-inner {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
 
+.modal-desc {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
 
+.modal-desc-text {
+	flex-grow: 1;
+	white-space: pre-wrap;
+	overflow-y: hidden;
+}
 
+.modal-desc textarea {
+	flex-grow: 1;
+	margin-bottom: 1em;
+	padding: 0.25em;
+	font-family: "Roboto", sans-serif;
+}
 
-
-
+.modal-desc button {
+	padding: 0.5em;
+}
 
 
 

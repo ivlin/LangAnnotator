@@ -20,8 +20,8 @@ export default class MainText extends React.Component {
 			annotation_id: 1,
 			keys: 1, 
 			maxDepth: 0,
-			text: "01234 67890123 56 890 2345678 0123 5678 01 3456 8901 345 789012",
-			textPanes: ["01234 67890123 56 890 2345678 0123 5678 01 3456 8901 345 789012"]
+			text: "",
+			textPanes: []
 		};
 		this.handleMouseUp = this.handleMouseUp.bind(this);
 		this.handleRerender = this.handleRerender.bind(this);
@@ -209,8 +209,8 @@ export default class MainText extends React.Component {
 
 	handleAppend() {
 		var newPanes = this.state.textPanes;
-		newPanes.push(<br key={ parseInt("" + -1 + this.state.text.length + this.state.text.length) }></br>);
 		newPanes.push("" + document.getElementById("append-text").value);
+		newPanes.push(<br key={ parseInt("" + -1 + this.state.text.length + this.state.text.length) }></br>);
 		this.setState({ textPanes : newPanes, text : this.state.text + "\n" + document.getElementById("append-text").value})
 		document.getElementById("append-text").value = "";
 	}
@@ -221,7 +221,7 @@ export default class MainText extends React.Component {
 			<div>
 				<div className="nav-append">
 					<input type="text" id="append-text"></input> 
-					<button onClick={this.handleAppend} type="button">Add to textbody</button>
+					<button onClick={this.handleAppend} type="button">Append</button>
 				</div>
 				<div id="textbody" onMouseUp={this.handleMouseUp}>
 					{ this.state.textPanes } 

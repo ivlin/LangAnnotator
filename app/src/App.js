@@ -8,9 +8,7 @@ import './components/textbody.css';
 
 function App() {
   return (
-    <div id="root">
-      <MainPage></MainPage>
-    </div>
+    <MainPage></MainPage>
   );
 }
 
