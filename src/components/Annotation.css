@@ -7,18 +7,27 @@
 	border-right: solid 1px white;
 	background-color: #233d4d;
 	color: #f7f7f2;
+    padding: 1em 2em;
+    width: auto;
+}
+
+.menuBar button svg {
+    height: 2em;
+    width: 2em;
 }
 
 .menuBar span {
 	flex-grow: 1;
 	background-color: #233d4d;
 	color: #f7f7f2;
-	padding: 0 1em;
+	padding: 0.5em 1em;
+    font-size: 2em;
 }
 
 .sideNav {
 	display: flex;
 	flex-direction: column;
+    font-size: 2em;
 }
 
 .menuItem {
@@ -32,9 +41,9 @@
 }
 
 .annotation-modal {
-	position:absolute; 
-	left:50%; 
-	top:50%; 
+	position:absolute;
+	left:50%;
+	top:50%;
 	transform: translate(-50%, -50%);
 	width:80%;
 	height:80%;
@@ -51,9 +60,9 @@
 }
 
 .modal {
-  position:absolute; 
-  left:50%; 
-  top:50%; 
+  position:absolute;
+  left:50%;
+  top:50%;
   width:50%;
   height:50%;
   line-height: 1em;

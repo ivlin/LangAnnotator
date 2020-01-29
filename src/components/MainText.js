@@ -19,15 +19,15 @@ export default class MainText extends React.Component {
 		super(props);
 
 		this.state = {
-			ANNOTATIONS: [], 
+			ANNOTATIONS: [],
 			annotation_id: 1,
-			keys: 1, 
+			keys: 1,
 			maxDepth: 0,
 			text: "",
 			textPanes: [],
-			isShowHelp: false
+			isShowHelp: true
 		};
-		
+
 		this.handleMouseUp = this.handleMouseUp.bind(this);
 		this.handleRerender = this.handleRerender.bind(this);
 		this.handleAppend = this.handleAppend.bind(this);
@@ -55,12 +55,12 @@ export default class MainText extends React.Component {
 				}
 				this.reloadTextPanes(modified_children, ann, color);
 
-				pane_list[i] = 
-					<AnnotationButton 
+				pane_list[i] =
+					<AnnotationButton
 						updater={ this.handleRerender }
-						key={ pane_list[i].key }  
-						depth={ pane_list[i].props.depth } 
-						annotation={ pane_list[i].props.annotation } 
+						key={ pane_list[i].key }
+						depth={ pane_list[i].props.depth }
+						annotation={ pane_list[i].props.annotation }
 						color={ pane_list[i].props.annotation==ann ? color : pane_list[i].props.annotation.color } >
 						{ modified_children }
 					</AnnotationButton>;
@@ -68,7 +68,7 @@ export default class MainText extends React.Component {
 		}
 		this.setState(this.state);
 	}
-	
+
 	handleMouseUp() {
 		if (document.getElementsByClassName("modal").length){
 			return;
@@ -87,12 +87,12 @@ export default class MainText extends React.Component {
 	getUserInput() {
 		return window.prompt("What is this annotation for?","");
 	}
-	
+
 	styleSelection(sel, annotation, containerid) {
 		annotation.id = this.state.annotation_id;
 		annotation.startIndex = this.getTotalOffset(sel.anchorNode, sel.anchorOffset, containerid);
 		annotation.endIndex = this.getTotalOffset(sel.focusNode, sel.focusOffset, containerid);
-		
+
 		if (annotation.startIndex > annotation.endIndex) {
 			var temp = annotation.startIndex;
 			annotation.startIndex = annotation.endIndex;
@@ -102,7 +102,7 @@ export default class MainText extends React.Component {
 		var depth = this.getDepthRange(annotation);
 		annotation.depth = depth;
 		this.setState({ maxDepth: Math.max(this.state.maxDepth, depth) });
-	
+
 		//no modification necessary
 		var updatedtextPanes = []
 		var startInd = 0;
@@ -121,7 +121,7 @@ export default class MainText extends React.Component {
 			updatedtextPanes=updatedtextPanes.concat(x);
 			startInd = endInd;
 		}
-		
+
 		this.setState({textPanes: updatedtextPanes});
 		this.setState({annotation_id: this.state.annotation_id+1});
 		this.state.ANNOTATIONS.push(annotation);
@@ -131,7 +131,7 @@ export default class MainText extends React.Component {
 		var validDepths = [];
 		for (var i=0; i<this.state.maxDepth+1; i++){
 			validDepths.push(i+1);
-		}	
+		}
 		for (var previous of this.state.ANNOTATIONS) {
 			if (previous.startIndex < annotation.endIndex && annotation.startIndex < previous.endIndex) {
 				validDepths[previous.depth - 1] = -1;
@@ -141,7 +141,7 @@ export default class MainText extends React.Component {
 			if (d>0) {
 				return d;
 			}
-		}	
+		}
 		return this.state.maxDepth+1;
 	}
 
@@ -166,23 +166,23 @@ export default class MainText extends React.Component {
 		if (new_annotation.startIndex < prev_end && prev_start < new_annotation.endIndex) {
 
 			//Base case - String
-			
-			if (typeof prev_annotation == 'string' || prev_annotation instanceof String){				
+
+			if (typeof prev_annotation == 'string' || prev_annotation instanceof String){
 				var startHighlight = new_annotation.startIndex > prev_start ? new_annotation.startIndex - prev_start : 0;
 				var prev_len = prev_end - prev_start;
 				var endHighlight = new_annotation.endIndex > prev_end ? prev_len : prev_len - (prev_end - new_annotation.endIndex);
-				
+
 				new_annotation.color = colors[0];
 
 				return [prev_annotation.slice(0,startHighlight),
-						<AnnotationButton 
+						<AnnotationButton
 							updater={ this.handleRerender }
-							key={ parseInt("" + new_annotation.id + prev_start + prev_end) }  
-							depth={ new_annotation.depth } 
-							annotation={ new_annotation } 
+							key={ parseInt("" + new_annotation.id + prev_start + prev_end) }
+							depth={ new_annotation.depth }
+							annotation={ new_annotation }
 							color={ new_annotation.color } >
 							{prev_annotation.slice(startHighlight,endHighlight)}
-						</AnnotationButton>, 
+						</AnnotationButton>,
 						prev_annotation.slice(endHighlight)]
 			}
 			else if (prev_annotation.type=='br') {
@@ -196,23 +196,23 @@ export default class MainText extends React.Component {
 			}
 			var modified_children = [];
 			for (var i=0; i<prev_children.length; i++){
-				prev_end = (typeof prev_children[i] == 'string' || prev_children[i] instanceof String) ? 
+				prev_end = (typeof prev_children[i] == 'string' || prev_children[i] instanceof String) ?
 					prev_start + prev_children[i].length : prev_children[i].props.annotation.endIndex;
-				
+
 				modified_children = modified_children.concat(this.processAnnotation(new_annotation, prev_children[i], prev_start, prev_end));
-				
+
 				prev_start = prev_end;
 			}
-			
-			return [<AnnotationButton 
+
+			return [<AnnotationButton
 						updater={ this.handleRerender }
-						key={ parseInt("" + new_annotation.id + prev_start + prev_end) } 
-						depth={ prev_annotation.props.depth } 
+						key={ parseInt("" + new_annotation.id + prev_start + prev_end) }
+						depth={ prev_annotation.props.depth }
 						annotation={ prev_annotation.props.annotation }
 						color={ prev_annotation.props.annotation.color }>
 						{ modified_children }
 					</AnnotationButton>];
-		}	
+		}
 		else {
 			return prev_annotation;
 		}
@@ -234,36 +234,34 @@ export default class MainText extends React.Component {
 
 	handleClear() {
 		this.setState({
-				ANNOTATIONS: [], 
+				ANNOTATIONS: [],
 				annotation_id: 1,
-				keys: 1, 
+				keys: 1,
 				maxDepth: 0,
 				text: "",
 				textPanes: []
 			});
 	}
-	
+
 	onSetSidebarOpen(open) {
 		this.setState({ sidebarOpen: open })
 	}
-	
+
 	render() {
-		console.log(this.state.ANNOTATIONS);
-		console.log(this.state.textPanes);
 		var textbody = (
 			<div>
 				<div className="nav-append">
-					<input type="text" id="append-text" onKeyUp={ this.handleAppendEnter }></input> 
+					<input type="text" id="append-text" onKeyUp={ this.handleAppendEnter }></input>
 					<button onClick={this.handleAppend} type="button">Append</button>
 					<button onClick={this.handleClear} type="button"><FaTrash/></button>
 				</div>
 				<div id="textbody" onMouseUp={this.handleMouseUp}>
-					{ this.state.textPanes } 
+					{ this.state.textPanes }
 				</div>
 			</div>
 		);
 
-		var sidebarContent = 
+		var sidebarContent =
 			<div className="sideNav">
 				<a className="menuItem" href="#" onClick={ this.handleExample }> Example </a>
 				<a className="menuItem" href="#" onClick={ this.handleShowHelp }> Help </a>
@@ -289,9 +287,8 @@ export default class MainText extends React.Component {
 	    		<Sidebar sidebar={ sidebarContent }
 			        	open={this.state.sidebarOpen}
 			        	onSetOpen={this.onSetSidebarOpen}
-			        	styles={{ sidebar: { background: "white", width: "10em"} }}>
-     				
-     				<div className="menuBar">	
+			        	styles={{ sidebar: { background: "white", width: "25%"} }}>
+     				<div className="menuBar">
 	     				<button style={{ minHeight: "2em" }} onClick={() => this.onSetSidebarOpen(true)}>
     	     				<FaBars/>
         				</button>
@@ -335,26 +332,26 @@ export default class MainText extends React.Component {
 		a4.description = "Guatemalan activist and Nobel Peace prize winner";
 
 		this.setState({
-			ANNOTATIONS: [a1, a2, a3, a4], 
+			ANNOTATIONS: [a1, a2, a3, a4],
 			annotation_id: 5,
 			keys: 2,
 			maxDepth: 1,
 			text: "Este mundo no va a cambiar a menos que estemos dispuestos a cambiar nosotros mismos\nThe world won't change unless we're willing to change ourselves\nRigoberta Menchu",
-			textPanes: 
-				["Este mundo no va a ", 
-				<AnnotationButton 
+			textPanes:
+				["Este mundo no va a ",
+				<AnnotationButton
 						updater={ this.handleRerender }
-						key={ parseInt("" + a1.id + a1.startIndex + a1.endIndex) } 
-						depth={ a1.depth } 
+						key={ parseInt("" + a1.id + a1.startIndex + a1.endIndex) }
+						depth={ a1.depth }
 						annotation={ a1 }
 						color={ a1.color }>
 						cambiar
 					</AnnotationButton>,
 				" a menos que est",
-				<AnnotationButton 
+				<AnnotationButton
 						updater={ this.handleRerender }
-						key={ parseInt("" + a2.id + a2.startIndex + a2.endIndex) } 
-						depth={ a2.depth } 
+						key={ parseInt("" + a2.id + a2.startIndex + a2.endIndex) }
+						depth={ a2.depth }
 						annotation={ a2 }
 						color={ a2.color }>
 						emos
@@ -362,10 +359,10 @@ export default class MainText extends React.Component {
 				" dispuestos a cambiar nosotros mismos",
 				<br></br>,
 				"The world won't ",
-				<AnnotationButton 
+				<AnnotationButton
 						updater={ this.handleRerender }
-						key={ parseInt("" + a3.id + a3.startIndex + a3.endIndex) } 
-						depth={ a3.depth } 
+						key={ parseInt("" + a3.id + a3.startIndex + a3.endIndex) }
+						depth={ a3.depth }
 						annotation={ a3 }
 						color={ a3.color }>
 						change
@@ -373,10 +370,10 @@ export default class MainText extends React.Component {
 				 " unless we're willing to change ourselves",
 				 <br></br>,
 				 "",
-				 <AnnotationButton 
+				 <AnnotationButton
 						updater={ this.handleRerender }
-						key={ parseInt("" + a4.id + a4.startIndex + a4.endIndex) } 
-						depth={ a4.depth } 
+						key={ parseInt("" + a4.id + a4.startIndex + a4.endIndex) }
+						depth={ a4.depth }
 						annotation={ a4 }
 						color={ a4.color }>
 						Rigoberta Menchu
