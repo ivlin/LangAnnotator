@@ -1,4 +1,6 @@
 import React from 'react';
+import Sidebar from 'react-sidebar';
+import { FaBars, FaTrash } from 'react-icons/fa'
 
 import Annotation from './Annotation'
 import AnnotationButton from './AnnotationButton'
@@ -15,17 +17,27 @@ const colors = [
 export default class MainText extends React.Component {
 	constructor(props) {
 		super(props);
+
 		this.state = {
 			ANNOTATIONS: [], 
 			annotation_id: 1,
 			keys: 1, 
 			maxDepth: 0,
 			text: "",
-			textPanes: []
+			textPanes: [],
+			isShowHelp: false
 		};
+		
 		this.handleMouseUp = this.handleMouseUp.bind(this);
 		this.handleRerender = this.handleRerender.bind(this);
 		this.handleAppend = this.handleAppend.bind(this);
+		this.handleAppendEnter = this.handleAppendEnter.bind(this);
+		this.handleClear = this.handleClear.bind(this);
+
+
+		this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
+		this.handleExample = this.handleExample.bind(this);
+		this.handleShowHelp = this.handleShowHelp.bind(this);
 	}
 
 	handleRerender(ann, color) { // update colors
@@ -96,7 +108,6 @@ export default class MainText extends React.Component {
 		var startInd = 0;
 		var endInd = this.state.text.length;
 		for (var i=0; i<this.state.textPanes.length; i++){
-			console.log(this.state.textPanes[i]);
 			if (typeof this.state.textPanes[i] == 'string' || this.state.textPanes[i] instanceof String) {
 				endInd = startInd + this.state.textPanes[i].length;
 			}
@@ -215,18 +226,167 @@ export default class MainText extends React.Component {
 		document.getElementById("append-text").value = "";
 	}
 
+	handleAppendEnter(e) {
+		if (e.key == "Enter") {
+			this.handleAppend();
+		}
+	}
+
+	handleClear() {
+		this.setState({
+				ANNOTATIONS: [], 
+				annotation_id: 1,
+				keys: 1, 
+				maxDepth: 0,
+				text: "",
+				textPanes: []
+			});
+	}
+	
+	onSetSidebarOpen(open) {
+		this.setState({ sidebarOpen: open })
+	}
+	
 	render() {
-		console.log("Rerender");
-		return (
+		console.log(this.state.ANNOTATIONS);
+		console.log(this.state.textPanes);
+		var textbody = (
 			<div>
 				<div className="nav-append">
-					<input type="text" id="append-text"></input> 
+					<input type="text" id="append-text" onKeyUp={ this.handleAppendEnter }></input> 
 					<button onClick={this.handleAppend} type="button">Append</button>
+					<button onClick={this.handleClear} type="button"><FaTrash/></button>
 				</div>
 				<div id="textbody" onMouseUp={this.handleMouseUp}>
 					{ this.state.textPanes } 
 				</div>
 			</div>
 		);
+
+		var sidebarContent = 
+			<div className="sideNav">
+				<a className="menuItem" href="#" onClick={ this.handleExample }> Example </a>
+				<a className="menuItem" href="#" onClick={ this.handleShowHelp }> Help </a>
+				{ this.state.isShowHelp &&
+				<div style={{fontSize: "0.75em", padding: "0 0.25em"}}>
+					<p>
+						<b>Highlight</b> a part of the text to add an annotation.
+					</p>
+					<p>
+						<b>Click</b> an annotation to view it or modify it.
+					</p>
+					<p>
+						Use the top <b>Append</b> bar to add another line to the main text body.
+					</p>
+					<p>
+						Click on the <b>trash can</b> to clear the body of text.
+					</p>
+				</div>}
+			</div>
+
+	    return (
+	    	<div>
+	    		<Sidebar sidebar={ sidebarContent }
+			        	open={this.state.sidebarOpen}
+			        	onSetOpen={this.onSetSidebarOpen}
+			        	styles={{ sidebar: { background: "white", width: "10em"} }}>
+     				
+     				<div className="menuBar">	
+	     				<button style={{ minHeight: "2em" }} onClick={() => this.onSetSidebarOpen(true)}>
+    	     				<FaBars/>
+        				</button>
+        				<span>
+        					LangAnnotator
+        				</span>
+		    		</div>
+		    		{ textbody }
+	    		</Sidebar>
+	    	</div>);
+	}
+
+	handleExample() {
+		var a1 = new Annotation();
+		a1.id = 1;
+		a1.color = colors[1];
+		a1.depth = 1;
+		a1.startIndex = 19;
+		a1.endIndex = 27;
+		a1.description = "cambiar - verb\nto change";
+		var a2 = new Annotation();
+		a2.id = 2;
+		a2.color = colors[0];
+		a2.depth = 1;
+		a2.startIndex = 19;
+		a2.endIndex = 27;
+		a2.description = "emos/amos indicates that the pronoun is \"us\"";
+		var a3 = new Annotation();
+		a3.id = 3;
+		a3.color = colors[1];
+		a3.depth = 1;
+		a3.startIndex = 42;
+		a3.endIndex = 46;
+		a3.description = "cambiar";
+		var a4 = new Annotation();
+		a4.id = 4;
+		a4.color = colors[3];
+		a4.depth = 1;
+		a4.startIndex = 146;
+		a4.endIndex = 162;
+		a4.description = "Guatemalan activist and Nobel Peace prize winner";
+
+		this.setState({
+			ANNOTATIONS: [a1, a2, a3, a4], 
+			annotation_id: 5,
+			keys: 2,
+			maxDepth: 1,
+			text: "Este mundo no va a cambiar a menos que estemos dispuestos a cambiar nosotros mismos\nThe world won't change unless we're willing to change ourselves\nRigoberta Menchu",
+			textPanes: 
+				["Este mundo no va a ", 
+				<AnnotationButton 
+						updater={ this.handleRerender }
+						key={ parseInt("" + a1.id + a1.startIndex + a1.endIndex) } 
+						depth={ a1.depth } 
+						annotation={ a1 }
+						color={ a1.color }>
+						cambiar
+					</AnnotationButton>,
+				" a menos que est",
+				<AnnotationButton 
+						updater={ this.handleRerender }
+						key={ parseInt("" + a2.id + a2.startIndex + a2.endIndex) } 
+						depth={ a2.depth } 
+						annotation={ a2 }
+						color={ a2.color }>
+						emos
+					</AnnotationButton>,
+				" dispuestos a cambiar nosotros mismos",
+				<br></br>,
+				"The world won't ",
+				<AnnotationButton 
+						updater={ this.handleRerender }
+						key={ parseInt("" + a3.id + a3.startIndex + a3.endIndex) } 
+						depth={ a3.depth } 
+						annotation={ a3 }
+						color={ a3.color }>
+						change
+					</AnnotationButton>,
+				 " unless we're willing to change ourselves",
+				 <br></br>,
+				 "",
+				 <AnnotationButton 
+						updater={ this.handleRerender }
+						key={ parseInt("" + a4.id + a4.startIndex + a4.endIndex) } 
+						depth={ a4.depth } 
+						annotation={ a4 }
+						color={ a4.color }>
+						Rigoberta Menchu
+					</AnnotationButton>,
+				 "",
+				 <br></br>]
+		});
+	}
+
+	handleShowHelp() {
+		this.setState({ isShowHelp: !this.state.isShowHelp });
 	}
 }
