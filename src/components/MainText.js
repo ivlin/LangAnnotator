@@ -331,10 +331,13 @@ export default class MainText extends React.Component {
 						<b>Click</b> an annotation to view it or modify it.
 					</p>
 					<p>
-						Use the top <b>Append</b> bar to add another line to the main text body.
+						Use the top <b>Append</b> bar to add another line to the main text body. Use the <b>Import Plaintext</b> option to append large blocks of text.
 					</p>
 					<p>
 						Click on the <b>trash can</b> to clear the body of text.
+					</p>
+					<p> 
+						Save the state of your notebook from <b>Export Annotations</b> and reload it using <b>Import Annotations</b>.
 					</p>
 				</div>}
 			</div>
