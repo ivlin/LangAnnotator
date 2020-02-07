@@ -1,6 +1,6 @@
 import React from 'react';
 import Sidebar from 'react-sidebar';
-import { FaBars, FaTrash } from 'react-icons/fa'
+import { FaBars, FaTrash, FaChevronCircleDown, FaChevronCircleUp } from 'react-icons/fa'
 
 import Annotation from './Annotation'
 import AnnotationButton from './AnnotationButton'
@@ -21,11 +21,13 @@ export default class MainText extends React.Component {
 		this.state = {
 			ANNOTATIONS: [],
 			annotation_id: 1,
-			keys: 1,
 			maxDepth: 0,
 			text: "",
 			textPanes: [],
-			isShowHelp: true
+			isShowHelp: true,
+			isShowImport: false, 
+			isShowImportAnnotations: false,
+			isShowExportAnnotations: false
 		};
 
 		this.handleMouseUp = this.handleMouseUp.bind(this);
@@ -34,10 +36,16 @@ export default class MainText extends React.Component {
 		this.handleAppendEnter = this.handleAppendEnter.bind(this);
 		this.handleClear = this.handleClear.bind(this);
 
-
 		this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
 		this.handleExample = this.handleExample.bind(this);
+		this.handleShowImport = this.handleShowImport.bind(this);
+		this.handleImportAppend = this.handleImportAppend.bind(this);
+		this.handleImportReplace = this.handleImportReplace.bind(this);
 		this.handleShowHelp = this.handleShowHelp.bind(this);
+	
+		this.handleShowExportAnnotations = this.handleShowExportAnnotations.bind(this);
+		this.handleShowImportAnnotations = this.handleShowImportAnnotations.bind(this);
+		this.handleImportAnnotations = this.handleImportAnnotations.bind(this);
 	}
 
 	handleRerender(ann, color) { // update colors
@@ -45,7 +53,6 @@ export default class MainText extends React.Component {
 	}
 
 	reloadTextPanes(pane_list, ann, color) {
-		var recolored_text = []
 		for (var i=0; i<pane_list.length; i++){
 			if (pane_list[i].props && pane_list[i].props.children) {
 				//reload children
@@ -61,7 +68,7 @@ export default class MainText extends React.Component {
 						key={ pane_list[i].key }
 						depth={ pane_list[i].props.depth }
 						annotation={ pane_list[i].props.annotation }
-						color={ pane_list[i].props.annotation==ann ? color : pane_list[i].props.annotation.color } >
+						color={ pane_list[i].props.annotation===ann ? color : pane_list[i].props.annotation.color } >
 						{ modified_children }
 					</AnnotationButton>;
 			}
@@ -108,10 +115,10 @@ export default class MainText extends React.Component {
 		var startInd = 0;
 		var endInd = this.state.text.length;
 		for (var i=0; i<this.state.textPanes.length; i++){
-			if (typeof this.state.textPanes[i] == 'string' || this.state.textPanes[i] instanceof String) {
+			if (typeof this.state.textPanes[i] === 'string' || this.state.textPanes[i] instanceof String) {
 				endInd = startInd + this.state.textPanes[i].length;
 			}
-			else if (this.state.textPanes[i].type=='br') {
+			else if (this.state.textPanes[i].type==='br') {
 				endInd = startInd; //while it is treated as \n in text, it doesn't count as a valid reduction of length
 			}
 			else {
@@ -146,7 +153,7 @@ export default class MainText extends React.Component {
 	}
 
 	getTotalOffset(anchor, anchorOffset, containerid) {
-		var escaped = /(\t|\n|\r)+/;
+		var escaped = /(\t|\r)+/;
 		var offset = anchorOffset - (anchor.textContent.substring(0,anchorOffset).length - anchor.textContent.substring(0,anchorOffset).replace(escaped,'').length);
 		var node = anchor;
 		while (node !== document.getElementById(containerid)) {
@@ -167,7 +174,7 @@ export default class MainText extends React.Component {
 
 			//Base case - String
 
-			if (typeof prev_annotation == 'string' || prev_annotation instanceof String){
+			if (typeof prev_annotation === 'string' || prev_annotation instanceof String){
 				var startHighlight = new_annotation.startIndex > prev_start ? new_annotation.startIndex - prev_start : 0;
 				var prev_len = prev_end - prev_start;
 				var endHighlight = new_annotation.endIndex > prev_end ? prev_len : prev_len - (prev_end - new_annotation.endIndex);
@@ -185,7 +192,7 @@ export default class MainText extends React.Component {
 						</AnnotationButton>,
 						prev_annotation.slice(endHighlight)]
 			}
-			else if (prev_annotation.type=='br') {
+			else if (prev_annotation.type==='br') {
 				return [<br key={ prev_annotation.key }></br>]
 			}
 
@@ -196,7 +203,7 @@ export default class MainText extends React.Component {
 			}
 			var modified_children = [];
 			for (var i=0; i<prev_children.length; i++){
-				prev_end = (typeof prev_children[i] == 'string' || prev_children[i] instanceof String) ?
+				prev_end = (typeof prev_children[i] === 'string' || prev_children[i] instanceof String) ?
 					prev_start + prev_children[i].length : prev_children[i].props.annotation.endIndex;
 
 				modified_children = modified_children.concat(this.processAnnotation(new_annotation, prev_children[i], prev_start, prev_end));
@@ -232,6 +239,28 @@ export default class MainText extends React.Component {
 		}
 	}
 
+	handleImportReplace() {
+		var newPanes = [];
+		newPanes.push("" + document.getElementById("import-text").value);
+		newPanes.push(<br key={ parseInt("" + -1 + this.state.text.length + this.state.text.length) }></br>);
+		this.setState({
+			ANNOTATIONS: [],
+			annotation_id: 1,
+			maxDepth: 0,
+			text: "",
+			textPanes: newPanes
+		});
+		document.getElementById("import-text").value = "";
+	}
+	
+	handleImportAppend() {
+		var newPanes = this.state.textPanes;
+		newPanes.push("" + document.getElementById("import-text").value);
+		newPanes.push(<br key={ parseInt("" + -1 + this.state.text.length + this.state.text.length) }></br>);
+		this.setState({ textPanes : newPanes, text : this.state.text + "\n" + document.getElementById("import-text").value})
+		document.getElementById("import-text").value = "";
+	}
+
 	handleClear() {
 		this.setState({
 				ANNOTATIONS: [],
@@ -254,7 +283,7 @@ export default class MainText extends React.Component {
 					<input type="text" id="append-text" onKeyUp={ this.handleAppendEnter }></input>
 					<button onClick={this.handleAppend} type="button">Append</button>
 					<button onClick={this.handleClear} type="button"><FaTrash/></button>
-				</div>
+				</div>	
 				<div id="textbody" onMouseUp={this.handleMouseUp}>
 					{ this.state.textPanes }
 				</div>
@@ -264,9 +293,37 @@ export default class MainText extends React.Component {
 		var sidebarContent =
 			<div className="sideNav">
 				<a className="menuItem" href="#" onClick={ this.handleExample }> Example </a>
-				<a className="menuItem" href="#" onClick={ this.handleShowHelp }> Help </a>
-				{ this.state.isShowHelp &&
-				<div style={{fontSize: "0.75em", padding: "0 0.25em"}}>
+				<a className="menuItem" href="#" onClick={ this.handleShowImport }> Import Plaintext { this.state.isShowImport ? <FaChevronCircleUp/> : <FaChevronCircleDown/> }</a>
+				{
+					this.state.isShowImport &&
+					<div>
+						<textarea id="import-text" style={ {width:"100%", fontSize: "0.75em", height:"12em"} } placeholder="Enter text to input.">
+						</textarea>
+						<button style={ {width:"50%", fontSize: "0.75em"} } onClick={this.handleImportReplace} type="button">Replace</button>
+						<button style={ {width:"50%", fontSize: "0.75em"} } onClick={this.handleImportAppend} type="button">Append</button>
+					</div>
+				}
+				<a className="menuItem" href="#" onClick={ this.handleShowExportAnnotations }> Export Annotations { this.state.isShowExportAnnotations ? <FaChevronCircleUp/> : <FaChevronCircleDown/> }</a>
+				{
+					 this.state.isShowExportAnnotations &&
+					<div>
+						<textarea id="export-annotations" style={ {width:"100%", fontSize: "0.75em", height:"12em"} } readOnly value={ JSON.stringify(this.state) }>
+						</textarea>
+					</div>
+				}
+				<a className="menuItem" href="#" onClick={ this.handleShowImportAnnotations }> Import Annotations { this.state.isShowImportAnnotations ? <FaChevronCircleUp/> : <FaChevronCircleDown/> } </a>
+				{
+					 this.state.isShowImportAnnotations &&
+					<div>
+						<textarea id="import-annotations" style={ {width:"100%", fontSize: "0.75em", height:"12em"} }>
+						</textarea>
+						<button style={ {width:"100%", fontSize: "0.75em"} } onClick={this.handleImportAnnotations} type="button">Load</button>
+					</div>
+				}
+				<a className="menuItem" href="#" onClick={ this.handleShowHelp }> Help { this.state.isShowHelp ? <FaChevronCircleUp/> : <FaChevronCircleDown/> }</a>
+				{ 
+					this.state.isShowHelp &&
+					<div style={{fontSize: "0.75em", padding: "0 0.25em"}}>
 					<p>
 						<b>Highlight</b> a part of the text to add an annotation.
 					</p>
@@ -334,7 +391,6 @@ export default class MainText extends React.Component {
 		this.setState({
 			ANNOTATIONS: [a1, a2, a3, a4],
 			annotation_id: 5,
-			keys: 2,
 			maxDepth: 1,
 			text: "Este mundo no va a cambiar a menos que estemos dispuestos a cambiar nosotros mismos\nThe world won't change unless we're willing to change ourselves\nRigoberta Menchu",
 			textPanes:
@@ -357,7 +413,7 @@ export default class MainText extends React.Component {
 						emos
 					</AnnotationButton>,
 				" dispuestos a cambiar nosotros mismos",
-				<br></br>,
+				<br key={1}></br>,
 				"The world won't ",
 				<AnnotationButton
 						updater={ this.handleRerender }
@@ -368,7 +424,7 @@ export default class MainText extends React.Component {
 						change
 					</AnnotationButton>,
 				 " unless we're willing to change ourselves",
-				 <br></br>,
+				 <br key={2}></br>,
 				 "",
 				 <AnnotationButton
 						updater={ this.handleRerender }
@@ -379,11 +435,74 @@ export default class MainText extends React.Component {
 						Rigoberta Menchu
 					</AnnotationButton>,
 				 "",
-				 <br></br>]
+				 <br key={3}></br>]
 		});
+		this.setState();
 	}
 
 	handleShowHelp() {
 		this.setState({ isShowHelp: !this.state.isShowHelp });
 	}
+
+	handleShowImport() {
+		this.setState({ isShowImport: !this.state.isShowImport });
+	}
+
+	handleShowImportAnnotations() {
+		this.setState({ isShowImportAnnotations: !this.state.isShowImportAnnotations });
+	}
+
+	handleShowExportAnnotations() {
+		this.setState({ isShowExportAnnotations: !this.state.isShowExportAnnotations });
+	}
+
+	handleImportAnnotations() {
+		var annotations = JSON.parse(document.getElementById("import-annotations").value);
+		annotations.ANNOTATIONS = this.regenerateAnnotations(annotations.ANNOTATIONS);
+		annotations.textPanes = this.regenerateTextPanes(annotations.textPanes, annotations.ANNOTATIONS);
+		this.setState(annotations);
+	}
+
+	regenerateAnnotations(annotations) {
+		var regenerated = []
+		var temp;
+		for (var i=0; i<annotations.length; i++){
+			temp = new Annotation();
+			temp.id = annotations[i]._id; 
+			temp.color = annotations[i]._color;
+			temp.depth = annotations[i]._depth; 
+			temp.startIndex = annotations[i]._startIndex;
+			temp.endIndex = annotations[i]._endIndex; 
+			temp.description = annotations[i]._description;
+			regenerated.push(temp)
+		}
+		return regenerated;
+	}
+
+	regenerateTextPanes(annotations, ann_refs) {
+		var regenerated = [];
+		for (var i=0; i<annotations.length; i++){
+			if (typeof annotations[i] === 'string' || annotations[i] instanceof String) {
+				regenerated.push(annotations[i]);
+			}
+			else if (annotations[i].type == "br") {
+				regenerated.push(<br key={ annotations[i].key }></br>);
+			}
+			else {
+				regenerated.push(
+					<AnnotationButton
+						updater={ this.handleRerender }
+						key={ annotations[i].key }
+						depth={ annotations[i].props.depth }
+						annotation={ ann_refs[annotations[i].props.annotation._id - 1] }
+						color={ annotations[i].props.annotation.color }>
+						{ Array.isArray(annotations[i].props.children) ? 
+							this.regenerateTextPanes(annotations[i].props.children, ann_refs) :
+							this.regenerateTextPanes([annotations[i].props.children], ann_refs)[0] }
+					</AnnotationButton>);
+			}
+		}
+		return regenerated;
+	}
+
 }

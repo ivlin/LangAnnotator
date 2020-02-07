@@ -121,6 +121,7 @@
 
 #textbody {
   padding: 0.25em;
+  white-space: pre-wrap;
 }
 
 .modal-header {
@@ -157,9 +158,15 @@
 	padding: 0.5em;
 }
 
+.sideNav .menuItem svg {
+	position: relative;
+	bottom: -0.1em;
+}
 
-
-
+.sideNav button {
+	padding:0.25em;
+	margin: 0.1em 0;
+}
 
 
 
