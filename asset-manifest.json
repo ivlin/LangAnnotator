@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/LangAnnotator/static/css/main.9ee9d00b.chunk.css",
-    "main.js": "/LangAnnotator/static/js/main.9e5e7441.chunk.js",
-    "main.js.map": "/LangAnnotator/static/js/main.9e5e7441.chunk.js.map",
+    "main.js": "/LangAnnotator/static/js/main.0ab78285.chunk.js",
+    "main.js.map": "/LangAnnotator/static/js/main.0ab78285.chunk.js.map",
     "runtime-main.js": "/LangAnnotator/static/js/runtime-main.db24354b.js",
     "runtime-main.js.map": "/LangAnnotator/static/js/runtime-main.db24354b.js.map",
     "static/js/2.de66858f.chunk.js": "/LangAnnotator/static/js/2.de66858f.chunk.js",
     "static/js/2.de66858f.chunk.js.map": "/LangAnnotator/static/js/2.de66858f.chunk.js.map",
     "index.html": "/LangAnnotator/index.html",
-    "precache-manifest.2da55702dc515c67bf254b9c3a323f83.js": "/LangAnnotator/precache-manifest.2da55702dc515c67bf254b9c3a323f83.js",
+    "precache-manifest.e8f6c28c3942764a02dcc37e83cc8f5a.js": "/LangAnnotator/precache-manifest.e8f6c28c3942764a02dcc37e83cc8f5a.js",
     "service-worker.js": "/LangAnnotator/service-worker.js",
     "static/css/main.9ee9d00b.chunk.css.map": "/LangAnnotator/static/css/main.9ee9d00b.chunk.css.map",
     "static/js/2.de66858f.chunk.js.LICENSE": "/LangAnnotator/static/js/2.de66858f.chunk.js.LICENSE"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.db24354b.js",
     "static/js/2.de66858f.chunk.js",
     "static/css/main.9ee9d00b.chunk.css",
-    "static/js/main.9e5e7441.chunk.js"
+    "static/js/main.0ab78285.chunk.js"
   ]
 }

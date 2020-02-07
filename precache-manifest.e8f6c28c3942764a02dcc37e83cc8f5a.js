@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "0a0c6a621c083b67d9656f32bb075c0f",
+    "revision": "1cdb1f5d40bbe295c961cefcc21c85b8",
     "url": "/LangAnnotator/index.html"
   },
   {
-    "revision": "7adab75a2ff9bfd3e7de",
+    "revision": "8e8f801c59e88ec17097",
     "url": "/LangAnnotator/static/css/main.9ee9d00b.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/LangAnnotator/static/js/2.de66858f.chunk.js.LICENSE"
   },
   {
-    "revision": "7adab75a2ff9bfd3e7de",
-    "url": "/LangAnnotator/static/js/main.9e5e7441.chunk.js"
+    "revision": "8e8f801c59e88ec17097",
+    "url": "/LangAnnotator/static/js/main.0ab78285.chunk.js"
   },
   {
     "revision": "1c53354ee5864003a3b8",
