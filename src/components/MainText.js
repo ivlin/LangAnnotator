@@ -78,9 +78,11 @@ export default class MainText extends React.Component {
 
 	handleMouseUp() {
 		if (document.getElementsByClassName("modal").length){
+			console.log("Hi");
 			return;
 		}
 		if (document.getSelection() && document.getSelection().toString().length>0) {    // all browsers, except IE before version 9
+			console.log("Why");
 			var sel = document.getSelection();
         	var input = this.getUserInput();
         	var annotation = new Annotation();
@@ -110,6 +112,9 @@ export default class MainText extends React.Component {
 		annotation.depth = depth;
 		this.setState({ maxDepth: Math.max(this.state.maxDepth, depth) });
 
+		console.log(annotation.startIndex);
+		console.log(annotation.endIndex);
+
 		//no modification necessary
 		var updatedtextPanes = []
 		var startInd = 0;
@@ -124,6 +129,11 @@ export default class MainText extends React.Component {
 			else {
 				endInd = this.state.textPanes[i].props.annotation.endIndex;
 			}
+			console.log(this.state.textPanes[i]);
+			console.log("Startind");
+			console.log(startInd);
+			console.log("Endind");
+			console.log(endInd);
 			var x = this.processAnnotation(annotation, this.state.textPanes[i], startInd, endInd);
 			updatedtextPanes=updatedtextPanes.concat(x);
 			startInd = endInd;
@@ -373,15 +383,15 @@ export default class MainText extends React.Component {
 		a2.id = 2;
 		a2.color = colors[0];
 		a2.depth = 1;
-		a2.startIndex = 19;
-		a2.endIndex = 27;
+		a2.startIndex = 42;
+		a2.endIndex = 46;
 		a2.description = "emos/amos indicates that the pronoun is \"us\"";
 		var a3 = new Annotation();
 		a3.id = 3;
 		a3.color = colors[1];
 		a3.depth = 1;
-		a3.startIndex = 42;
-		a3.endIndex = 46;
+		a3.startIndex = 99;
+		a3.endIndex = 105;
 		a3.description = "cambiar";
 		var a4 = new Annotation();
 		a4.id = 4;
