@@ -129,11 +129,6 @@ export default class MainText extends React.Component {
 			else {
 				endInd = this.state.textPanes[i].props.annotation.endIndex;
 			}
-			console.log(this.state.textPanes[i]);
-			console.log("Startind");
-			console.log(startInd);
-			console.log("Endind");
-			console.log(endInd);
 			var x = this.processAnnotation(annotation, this.state.textPanes[i], startInd, endInd);
 			updatedtextPanes=updatedtextPanes.concat(x);
 			startInd = endInd;
@@ -244,7 +239,7 @@ export default class MainText extends React.Component {
 	}
 
 	handleAppendEnter(e) {
-		if (e.key == "Enter") {
+		if (e.key === "Enter") {
 			this.handleAppend();
 		}
 	}
@@ -302,8 +297,8 @@ export default class MainText extends React.Component {
 
 		var sidebarContent =
 			<div className="sideNav">
-				<a className="menuItem" href="#" onClick={ this.handleExample }> Example </a>
-				<a className="menuItem" href="#" onClick={ this.handleShowImport }> Import Plaintext { this.state.isShowImport ? <FaChevronCircleUp/> : <FaChevronCircleDown/> }</a>
+				<p className="menuItem"  onClick={ this.handleExample }> Example </p>
+				<p className="menuItem"  onClick={ this.handleShowImport }> Import Plaintext { this.state.isShowImport ? <FaChevronCircleUp/> : <FaChevronCircleDown/> }</p>
 				{
 					this.state.isShowImport &&
 					<div>
@@ -313,7 +308,7 @@ export default class MainText extends React.Component {
 						<button style={ {width:"50%", fontSize: "0.75em"} } onClick={this.handleImportAppend} type="button">Append</button>
 					</div>
 				}
-				<a className="menuItem" href="#" onClick={ this.handleShowExportAnnotations }> Export Annotations { this.state.isShowExportAnnotations ? <FaChevronCircleUp/> : <FaChevronCircleDown/> }</a>
+				<p className="menuItem"  onClick={ this.handleShowExportAnnotations }> Export Annotations { this.state.isShowExportAnnotations ? <FaChevronCircleUp/> : <FaChevronCircleDown/> }</p>
 				{
 					 this.state.isShowExportAnnotations &&
 					<div>
@@ -321,7 +316,7 @@ export default class MainText extends React.Component {
 						</textarea>
 					</div>
 				}
-				<a className="menuItem" href="#" onClick={ this.handleShowImportAnnotations }> Import Annotations { this.state.isShowImportAnnotations ? <FaChevronCircleUp/> : <FaChevronCircleDown/> } </a>
+				<p className="menuItem"  onClick={ this.handleShowImportAnnotations }> Import Annotations { this.state.isShowImportAnnotations ? <FaChevronCircleUp/> : <FaChevronCircleDown/> } </p>
 				{
 					 this.state.isShowImportAnnotations &&
 					<div>
@@ -330,7 +325,7 @@ export default class MainText extends React.Component {
 						<button style={ {width:"100%", fontSize: "0.75em"} } onClick={this.handleImportAnnotations} type="button">Load</button>
 					</div>
 				}
-				<a className="menuItem" href="#" onClick={ this.handleShowHelp }> Help { this.state.isShowHelp ? <FaChevronCircleUp/> : <FaChevronCircleDown/> }</a>
+				<p className="menuItem"  onClick={ this.handleShowHelp }> Help { this.state.isShowHelp ? <FaChevronCircleUp/> : <FaChevronCircleDown/> }</p>
 				{ 
 					this.state.isShowHelp &&
 					<div style={{fontSize: "0.75em", padding: "0 0.25em"}}>
