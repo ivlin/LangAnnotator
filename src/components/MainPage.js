@@ -24,8 +24,6 @@ export default class MainPage extends React.Component {
 	}
 
 	render() {
-		console.log("rerender main page")
-		console.log(this.state.isExample)
 		return <MainText></MainText>;
 		/*
 	    return (

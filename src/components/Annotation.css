@@ -62,7 +62,7 @@
 }
 
 .modal {
-  position:absolute;
+  position:fixed;
   left:50%;
   top:50%;
   width:50%;
@@ -75,7 +75,7 @@
 }
 
 .modal-bg {
-	position:absolute;
+	position:fixed;
 	left:0;
 	top:0;
 	width:100%;
@@ -164,13 +164,22 @@
 
 .modal-desc textarea {
 	flex-grow: 1;
-	margin-bottom: 1em;
+	margin-bottom: 0.25em;
 	padding: 0.25em;
 	font-family: "Roboto", sans-serif;
 }
 
 .modal-desc button {
 	padding: 0.5em;
+	color: black;
+	border: none;
+	border-left: 1px solid white;
+	width: 50%;
+	background-color: #EDF2EF;
+}
+
+.modal-desc button:hover {
+	background-color: #C4D4CA;
 }
 
 .sideNav .menuItem svg {
@@ -196,3 +205,28 @@
 	margin-bottom: -0.5em;
 }
 
+.optionsBar {
+	display: flex;
+	justify-content: space-around;
+}
+
+.lowOptions {
+	padding: 0.5rem 0 0 0;
+	width: 50%;
+	text-align: center;
+}
+
+.lowOptions svg {
+	padding: 0.25rem;
+	width: 100%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.lowOptions:hover{
+	background-color: #233d4d;
+}
+
+.lowOptions:hover svg {
+	fill: #DDD;
+}

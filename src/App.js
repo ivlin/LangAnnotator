@@ -4,7 +4,7 @@ import React from 'react';
 import MainPage from './components/MainPage';
 
 import './App.css';
-import './components/textbody.css';
+import './components/TextBody.css';
 
 function App() {
   return (

@@ -35,6 +35,7 @@ export default class MainText extends React.Component {
 		this.handleAppend = this.handleAppend.bind(this);
 		this.handleAppendEnter = this.handleAppendEnter.bind(this);
 		this.handleClear = this.handleClear.bind(this);
+		this.handleDeleteAnnotation = this.handleDeleteAnnotation.bind(this);
 
 		this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
 		this.handleExample = this.handleExample.bind(this);
@@ -52,6 +53,19 @@ export default class MainText extends React.Component {
 		this.reloadTextPanes(this.state.textPanes, ann, color);
 	}
 
+	handleDeleteAnnotation(ann) {
+		var index = -1;
+		for (var i = 0; i < this.state.textPanes.length; i++){
+			if (this.state.textPanes[i].props && this.state.textPanes[i].props.annotation === ann.props.annotation) {
+				index = i;
+			}
+		}
+		if (index > -1) {
+			this.state.textPanes.splice.apply(this.state.textPanes, [index, 1].concat(ann.props.children));
+			this.setState(this.state)
+		}
+	}
+
 	reloadTextPanes(pane_list, ann, color) {
 		for (var i=0; i<pane_list.length; i++){
 			if (pane_list[i].props && pane_list[i].props.children) {
@@ -65,6 +79,7 @@ export default class MainText extends React.Component {
 				pane_list[i] =
 					<AnnotationButton
 						updater={ this.handleRerender }
+						deleter={ this.handleDeleteAnnotation }
 						key={ pane_list[i].key }
 						depth={ pane_list[i].props.depth }
 						annotation={ pane_list[i].props.annotation }
@@ -76,15 +91,16 @@ export default class MainText extends React.Component {
 		this.setState(this.state);
 	}
 
-	handleMouseUp() {
+	handleMouseUp(e) {
 		if (document.getElementsByClassName("modal").length){
-			console.log("Hi");
 			return;
 		}
 		if (document.getSelection() && document.getSelection().toString().length>0) {    // all browsers, except IE before version 9
-			console.log("Why");
 			var sel = document.getSelection();
         	var input = this.getUserInput();
+        	if (!input){
+        		return
+        	}
         	var annotation = new Annotation();
         	annotation.description = input;
         	annotation.selection = sel;
@@ -111,9 +127,6 @@ export default class MainText extends React.Component {
 		var depth = this.getDepthRange(annotation);
 		annotation.depth = depth;
 		this.setState({ maxDepth: Math.max(this.state.maxDepth, depth) });
-
-		console.log(annotation.startIndex);
-		console.log(annotation.endIndex);
 
 		//no modification necessary
 		var updatedtextPanes = []
@@ -189,6 +202,7 @@ export default class MainText extends React.Component {
 				return [prev_annotation.slice(0,startHighlight),
 						<AnnotationButton
 							updater={ this.handleRerender }
+							deleter={ this.handleDeleteAnnotation }
 							key={ parseInt("" + new_annotation.id + prev_start + prev_end) }
 							depth={ new_annotation.depth }
 							annotation={ new_annotation }
@@ -218,6 +232,7 @@ export default class MainText extends React.Component {
 
 			return [<AnnotationButton
 						updater={ this.handleRerender }
+						deleter={ this.handleDeleteAnnotation }
 						key={ parseInt("" + new_annotation.id + prev_start + prev_end) }
 						depth={ prev_annotation.props.depth }
 						annotation={ prev_annotation.props.annotation }
@@ -405,6 +420,7 @@ export default class MainText extends React.Component {
 				["Este mundo no va a ",
 				<AnnotationButton
 						updater={ this.handleRerender }
+						deleter={ this.handleDeleteAnnotation }
 						key={ parseInt("" + a1.id + a1.startIndex + a1.endIndex) }
 						depth={ a1.depth }
 						annotation={ a1 }
@@ -414,6 +430,7 @@ export default class MainText extends React.Component {
 				" a menos que est",
 				<AnnotationButton
 						updater={ this.handleRerender }
+						deleter={ this.handleDeleteAnnotation }
 						key={ parseInt("" + a2.id + a2.startIndex + a2.endIndex) }
 						depth={ a2.depth }
 						annotation={ a2 }
@@ -425,6 +442,7 @@ export default class MainText extends React.Component {
 				"The world won't ",
 				<AnnotationButton
 						updater={ this.handleRerender }
+						deleter={ this.handleDeleteAnnotation }
 						key={ parseInt("" + a3.id + a3.startIndex + a3.endIndex) }
 						depth={ a3.depth }
 						annotation={ a3 }
@@ -436,6 +454,7 @@ export default class MainText extends React.Component {
 				 "",
 				 <AnnotationButton
 						updater={ this.handleRerender }
+						deleter={ this.handleDeleteAnnotation }
 						key={ parseInt("" + a4.id + a4.startIndex + a4.endIndex) }
 						depth={ a4.depth }
 						annotation={ a4 }
@@ -493,13 +512,14 @@ export default class MainText extends React.Component {
 			if (typeof annotations[i] === 'string' || annotations[i] instanceof String) {
 				regenerated.push(annotations[i]);
 			}
-			else if (annotations[i].type == "br") {
+			else if (annotations[i].type === "br") {
 				regenerated.push(<br key={ annotations[i].key }></br>);
 			}
 			else {
 				regenerated.push(
 					<AnnotationButton
 						updater={ this.handleRerender }
+						deleter={ this.handleDeleteAnnotation }
 						key={ annotations[i].key }
 						depth={ annotations[i].props.depth }
 						annotation={ ann_refs[annotations[i].props.annotation._id - 1] }
