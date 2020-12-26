@@ -132,6 +132,7 @@ export default class MainText extends React.Component {
 		var updatedtextPanes = []
 		var startInd = 0;
 		var endInd = this.state.text.length;
+
 		for (var i=0; i<this.state.textPanes.length; i++){
 			if (typeof this.state.textPanes[i] === 'string' || this.state.textPanes[i] instanceof String) {
 				endInd = startInd + this.state.textPanes[i].length;
@@ -498,8 +499,8 @@ export default class MainText extends React.Component {
 			temp.id = annotations[i]._id; 
 			temp.color = annotations[i]._color;
 			temp.depth = annotations[i]._depth; 
-			temp.startIndex = annotations[i]._startIndex;
-			temp.endIndex = annotations[i]._endIndex; 
+			temp.startIndex = annotations[i]._start;
+			temp.endIndex = annotations[i]._end; 
 			temp.description = annotations[i]._description;
 			regenerated.push(temp)
 		}
