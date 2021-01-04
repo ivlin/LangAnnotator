@@ -22,6 +22,7 @@ export default class MainText extends React.Component {
 			ANNOTATIONS: [],
 			annotation_id: 1,
 			maxDepth: 0,
+			defaultColorInd: 0,
 			text: "",
 			textPanes: [],
 			isShowHelp: true,
@@ -36,6 +37,7 @@ export default class MainText extends React.Component {
 		this.handleAppendEnter = this.handleAppendEnter.bind(this);
 		this.handleClear = this.handleClear.bind(this);
 		this.handleDeleteAnnotation = this.handleDeleteAnnotation.bind(this);
+		this.handleDefaultColor = this.handleDefaultColor.bind(this);
 
 		this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
 		this.handleExample = this.handleExample.bind(this);
@@ -106,6 +108,7 @@ export default class MainText extends React.Component {
         	var annotation = new Annotation();
         	annotation.description = input;
         	annotation.selection = sel;
+        	annotation.color = colors[this.state.defaultColorInd];
         	this.styleSelection(sel, annotation, "textbody");
         	sel.empty();
   		}
@@ -200,7 +203,7 @@ export default class MainText extends React.Component {
 				var prev_len = prev_end - prev_start;
 				var endHighlight = new_annotation.endIndex > prev_end ? prev_len : prev_len - (prev_end - new_annotation.endIndex);
 
-				new_annotation.color = colors[0];
+				new_annotation.color = colors[this.state.defaultColorInd];
 
 				return [prev_annotation.slice(0,startHighlight),
 						<AnnotationButton
@@ -262,6 +265,10 @@ export default class MainText extends React.Component {
 		}
 	}
 
+	handleDefaultColor() {
+		this.setState({ defaultColorInd: (this.state.defaultColorInd + 1) % colors.length })
+	}
+
 	handleImportReplace() {
 		var newPanes = [];
 		newPanes.push("" + document.getElementById("import-text").value);
@@ -311,7 +318,7 @@ export default class MainText extends React.Component {
 		var sidebarContent =
 			<div className="sideNav">
 				<p className="menuItem"  onClick={ this.handleExample }> Example </p>
-				<p className="menuItem"  onClick={ this.handleShowImport }> Bulk Load Plaintext { this.state.isShowImport ? <FaChevronCircleUp/> : <FaChevronCircleDown/> }</p>
+				<p className="menuItem"  onClick={ this.handleShowImport }> Bulk Plaintext { this.state.isShowImport ? <FaChevronCircleUp/> : <FaChevronCircleDown/> }</p>
 				{
 					this.state.isShowImport &&
 					<div>
@@ -366,11 +373,10 @@ export default class MainText extends React.Component {
 			</div>
 
 	    return (
-	    	<div>
 	    		<Sidebar sidebar={ sidebarContent }
 			        	open={this.state.sidebarOpen}
 			        	onSetOpen={this.onSetSidebarOpen}
-			        	styles={{ sidebar: { background: "white", width: "25%"} }}>
+			        	styles={{ sidebar: { background: "white", width: "25%" } }}>
      				<div className="topNav">
      				<div className="menuBar">
 	     				<button style={{ minHeight: "2em" }} onClick={() => this.onSetSidebarOpen(true)}>
@@ -382,6 +388,7 @@ export default class MainText extends React.Component {
 		    		</div>
 					<div className="nav-append">
 						<input type="text" id="append-text" onKeyUp={ this.handleAppendEnter }></input>
+						<span className="dot" style={{ backgroundColor: colors[this.state.defaultColorInd] }} onClick={this.handleDefaultColor}></span>
 						<button onClick={this.handleAppend} type="button">Append</button>
 						<button onClick={this.handleClear} type="button"><FaTrash/></button>
 					</div>
@@ -396,14 +403,14 @@ export default class MainText extends React.Component {
         				</span>
 		    		</div>
 					<div className="nav-append">
-						<input type="text" id="append-text" onKeyUp={ this.handleAppendEnter }></input>
+						<input type="text" id="append-teaxt" onKeyUp={ this.handleAppendEnter }></input>
 						<button onClick={this.handleAppend} type="button">Append</button>
 						<button onClick={this.handleClear} type="button"><FaTrash/></button>
 					</div>
 					</div>
 		    		{ textbody }
 	    		</Sidebar>
-	    	</div>);
+	    	);
 	}
 
 	handleExample() {
