@@ -31,6 +31,10 @@
     font-size: 2em;
 }
 
+.sideNav::-webkit-scrollbar {
+	width: 0px;
+}
+
 .menuItem {
 	border-bottom: solid 1px #233d4d;
 	background-color: #f7f7f2;
@@ -229,4 +233,8 @@
 
 .lowOptions:hover svg {
 	fill: #DDD;
+}
+
+.annotationImport {
+  display: none;
 }

@@ -47,6 +47,8 @@ export default class MainText extends React.Component {
 		this.handleShowExportAnnotations = this.handleShowExportAnnotations.bind(this);
 		this.handleShowImportAnnotations = this.handleShowImportAnnotations.bind(this);
 		this.handleImportAnnotations = this.handleImportAnnotations.bind(this);
+		this.handleImportFileAnnotations = this.handleImportFileAnnotations.bind(this);
+		this.handleStartFileUpload = this.handleStartFileUpload.bind(this);
 	}
 
 	handleRerender(ann, color) { // update colors
@@ -314,7 +316,7 @@ export default class MainText extends React.Component {
 		var sidebarContent =
 			<div className="sideNav">
 				<p className="menuItem"  onClick={ this.handleExample }> Example </p>
-				<p className="menuItem"  onClick={ this.handleShowImport }> Import Plaintext { this.state.isShowImport ? <FaChevronCircleUp/> : <FaChevronCircleDown/> }</p>
+				<p className="menuItem"  onClick={ this.handleShowImport }> Bulk Load Plaintext { this.state.isShowImport ? <FaChevronCircleUp/> : <FaChevronCircleDown/> }</p>
 				{
 					this.state.isShowImport &&
 					<div>
@@ -328,8 +330,11 @@ export default class MainText extends React.Component {
 				{
 					 this.state.isShowExportAnnotations &&
 					<div>
-						<textarea id="export-annotations" style={ {width:"100%", fontSize: "0.75em", height:"12em"} } readOnly value={ JSON.stringify(this.state) }>
+						<textarea id="export-annotations" style={ {width:"100%", fontSize: "0.75em", height:"12em"} } readOnly value={ Buffer.from(JSON.stringify(this.state)).toString("base64") }>
 						</textarea>
+						<a href={ 'data:text/plain;charset=utf-8,' + Buffer.from(JSON.stringify(this.state)).toString("base64") } download={ "LangAnnotator.txt" }>
+							<button style={ {width:"100%", fontSize: "0.75em"} } type="button">Save as File</button>
+						</a>
 					</div>
 				}
 				<p className="menuItem"  onClick={ this.handleShowImportAnnotations }> Import Annotations { this.state.isShowImportAnnotations ? <FaChevronCircleUp/> : <FaChevronCircleDown/> } </p>
@@ -338,7 +343,9 @@ export default class MainText extends React.Component {
 					<div>
 						<textarea id="import-annotations" style={ {width:"100%", fontSize: "0.75em", height:"12em"} }>
 						</textarea>
-						<button style={ {width:"100%", fontSize: "0.75em"} } onClick={this.handleImportAnnotations} type="button">Load</button>
+						<button style={ {width:"50%", fontSize: "0.75em"} } onClick={this.handleImportAnnotations} type="button">Load</button>
+						<button style={ {width:"50%", fontSize: "0.75em"} } onClick={this.handleStartFileUpload} type="button">File Import</button>
+						<input type="file" id="annotationFileInput" className="annotationImport" onChange={(e) => this.handleImportFileAnnotations(e)} />
 					</div>
 				}
 				<p className="menuItem"  onClick={ this.handleShowHelp }> Help { this.state.isShowHelp ? <FaChevronCircleUp/> : <FaChevronCircleDown/> }</p>
@@ -485,10 +492,27 @@ export default class MainText extends React.Component {
 	}
 
 	handleImportAnnotations() {
-		var annotations = JSON.parse(document.getElementById("import-annotations").value);
+		let encodedAnnotations = document.getElementById("import-annotations").value;
+		var annotations = JSON.parse(Buffer.from(encodedAnnotations, "base64").toString("utf-8"));
 		annotations.ANNOTATIONS = this.regenerateAnnotations(annotations.ANNOTATIONS);
 		annotations.textPanes = this.regenerateTextPanes(annotations.textPanes, annotations.ANNOTATIONS);
 		this.setState(annotations);
+	}
+
+	handleImportFileAnnotations = async (e) => {
+		console.log("SUP");
+		e.preventDefault()
+		const reader = new FileReader()
+		reader.onload = async (e) => { 
+	    	const text = (e.target.result);
+	    	document.getElementById("import-annotations").value = text;
+	    };
+	    reader.readAsText(e.target.files[0]);
+	}
+
+	handleStartFileUpload() {
+		document.getElementById("annotationFileInput").click();
+		console.log("CLICKING")
 	}
 
 	regenerateAnnotations(annotations) {
