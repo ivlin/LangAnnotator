@@ -302,11 +302,6 @@ export default class MainText extends React.Component {
 	render() {
 		var textbody = (
 			<div>
-				<div className="nav-append">
-					<input type="text" id="append-text" onKeyUp={ this.handleAppendEnter }></input>
-					<button onClick={this.handleAppend} type="button">Append</button>
-					<button onClick={this.handleClear} type="button"><FaTrash/></button>
-				</div>	
 				<div id="textbody" onMouseUp={this.handleMouseUp}>
 					{ this.state.textPanes }
 				</div>
@@ -376,6 +371,7 @@ export default class MainText extends React.Component {
 			        	open={this.state.sidebarOpen}
 			        	onSetOpen={this.onSetSidebarOpen}
 			        	styles={{ sidebar: { background: "white", width: "25%"} }}>
+     				<div className="topNav">
      				<div className="menuBar">
 	     				<button style={{ minHeight: "2em" }} onClick={() => this.onSetSidebarOpen(true)}>
     	     				<FaBars/>
@@ -384,6 +380,27 @@ export default class MainText extends React.Component {
         					LangAnnotator
         				</span>
 		    		</div>
+					<div className="nav-append">
+						<input type="text" id="append-text" onKeyUp={ this.handleAppendEnter }></input>
+						<button onClick={this.handleAppend} type="button">Append</button>
+						<button onClick={this.handleClear} type="button"><FaTrash/></button>
+					</div>
+					</div>
+					<div style={{ visibility: "hidden" }}>
+     				<div className="menuBar">
+	     				<button style={{ minHeight: "2em" }} onClick={() => this.onSetSidebarOpen(true)}>
+    	     				<FaBars/>
+        				</button>
+        				<span>
+        					LangAnnotator
+        				</span>
+		    		</div>
+					<div className="nav-append">
+						<input type="text" id="append-text" onKeyUp={ this.handleAppendEnter }></input>
+						<button onClick={this.handleAppend} type="button">Append</button>
+						<button onClick={this.handleClear} type="button"><FaTrash/></button>
+					</div>
+					</div>
 		    		{ textbody }
 	    		</Sidebar>
 	    	</div>);
@@ -500,7 +517,6 @@ export default class MainText extends React.Component {
 	}
 
 	handleImportFileAnnotations = async (e) => {
-		console.log("SUP");
 		e.preventDefault()
 		const reader = new FileReader()
 		reader.onload = async (e) => { 
@@ -512,7 +528,6 @@ export default class MainText extends React.Component {
 
 	handleStartFileUpload() {
 		document.getElementById("annotationFileInput").click();
-		console.log("CLICKING")
 	}
 
 	regenerateAnnotations(annotations) {
