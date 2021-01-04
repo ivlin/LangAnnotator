@@ -414,34 +414,18 @@ export default class MainText extends React.Component {
 	}
 
 	handleExample() {
-		var a1 = new Annotation();
+		var a1 = new Annotation(1, 19, 27, "cambiar - verb\nto change");
 		a1.id = 1;
 		a1.color = colors[1];
-		a1.depth = 1;
-		a1.startIndex = 19;
-		a1.endIndex = 27;
-		a1.description = "cambiar - verb\nto change";
-		var a2 = new Annotation();
+		var a2 = new Annotation(1, 42, 46, "emos/amos indicates that the pronoun is \"us\"");
 		a2.id = 2;
 		a2.color = colors[0];
-		a2.depth = 1;
-		a2.startIndex = 42;
-		a2.endIndex = 46;
-		a2.description = "emos/amos indicates that the pronoun is \"us\"";
-		var a3 = new Annotation();
+		var a3 = new Annotation(1, 99, 105, "cambiar");
 		a3.id = 3;
 		a3.color = colors[1];
-		a3.depth = 1;
-		a3.startIndex = 99;
-		a3.endIndex = 105;
-		a3.description = "cambiar";
-		var a4 = new Annotation();
+		var a4 = new Annotation(1, 146, 162, "Guatemalan activist and Nobel Peace prize winner");
 		a4.id = 4;
 		a4.color = colors[3];
-		a4.depth = 1;
-		a4.startIndex = 146;
-		a4.endIndex = 162;
-		a4.description = "Guatemalan activist and Nobel Peace prize winner";
 
 		this.setState({
 			ANNOTATIONS: [a1, a2, a3, a4],
@@ -541,13 +525,9 @@ export default class MainText extends React.Component {
 		var regenerated = []
 		var temp;
 		for (var i=0; i<annotations.length; i++){
-			temp = new Annotation();
+			temp = new Annotation(annotations[i]._depth, annotations[i]._start, annotations[i]._end, annotations[i]._description);
 			temp.id = annotations[i]._id; 
 			temp.color = annotations[i]._color;
-			temp.depth = annotations[i]._depth; 
-			temp.startIndex = annotations[i]._start;
-			temp.endIndex = annotations[i]._end; 
-			temp.description = annotations[i]._description;
 			regenerated.push(temp)
 		}
 		return regenerated;

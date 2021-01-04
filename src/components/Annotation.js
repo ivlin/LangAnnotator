@@ -1,6 +1,10 @@
 export default class Annotation {
-	constructor() {
-		this._groups = []
+	constructor(depth=1, startIndex=0, endIndex=0, description="") {
+		this._groups = [];
+		this.depth = depth;;
+		this.startIndex = startIndex;
+		this.endIndex = endIndex;
+		this.description = description;
 	}
 	//MUTATORS
 	set id(id) {
