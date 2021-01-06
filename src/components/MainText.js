@@ -378,35 +378,37 @@ export default class MainText extends React.Component {
 			        	onSetOpen={this.onSetSidebarOpen}
 			        	styles={{ sidebar: { background: "white", width: "25%" } }}>
      				<div className="topNav">
-     				<div className="menuBar">
-	     				<button style={{ minHeight: "2em" }} onClick={() => this.onSetSidebarOpen(true)}>
-    	     				<FaBars/>
-        				</button>
-        				<span>
-        					LangAnnotator
-        				</span>
-		    		</div>
-					<div className="nav-append">
-						<input type="text" id="append-text" onKeyUp={ this.handleAppendEnter }></input>
-						<span className="dot" style={{ backgroundColor: colors[this.state.defaultColorInd] }} onClick={this.handleDefaultColor}></span>
-						<button onClick={this.handleAppend} type="button">Append</button>
-						<button onClick={this.handleClear} type="button"><FaTrash/></button>
-					</div>
+	     				<div className="menuBar">
+		     				<button style={{ minHeight: "2em" }} onClick={() => this.onSetSidebarOpen(true)}>
+	    	     				<FaBars/>
+	        				</button>
+	        				<span>
+	        					LangAnnotator
+	        				</span>
+			    		</div>
+						<div className="nav-append">
+							<input type="text" id="append-text" onKeyUp={ this.handleAppendEnter }></input>
+							<span className="dot-bg">
+								<span className="dot" style={{ backgroundColor: colors[this.state.defaultColorInd] }} onClick={this.handleDefaultColor}></span>
+							</span>
+							<button onClick={this.handleAppend} type="button">Append</button>
+							<button onClick={this.handleClear} type="button"><FaTrash/></button>
+						</div>
 					</div>
 					<div style={{ visibility: "hidden" }}>
-     				<div className="menuBar">
-	     				<button style={{ minHeight: "2em" }} onClick={() => this.onSetSidebarOpen(true)}>
-    	     				<FaBars/>
-        				</button>
-        				<span>
-        					LangAnnotator
-        				</span>
-		    		</div>
-					<div className="nav-append">
-						<input type="text" id="append-teaxt" onKeyUp={ this.handleAppendEnter }></input>
-						<button onClick={this.handleAppend} type="button">Append</button>
-						<button onClick={this.handleClear} type="button"><FaTrash/></button>
-					</div>
+	     				<div className="menuBar">
+		     				<button style={{ minHeight: "2em" }} onClick={() => this.onSetSidebarOpen(true)}>
+	    	     				<FaBars/>
+	        				</button>
+	        				<span>
+	        					LangAnnotator
+	        				</span>
+			    		</div>
+						<div className="nav-append">
+							<input type="text" id="append-teaxt" onKeyUp={ this.handleAppendEnter }></input>
+							<button onClick={this.handleAppend} type="button">Append</button>
+							<button onClick={this.handleClear} type="button"><FaTrash/></button>
+						</div>
 					</div>
 		    		{ textbody }
 	    		</Sidebar>

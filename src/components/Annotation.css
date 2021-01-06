@@ -1,5 +1,5 @@
 .topNav {	
-	position: absolute;
+	position: fixed;
 	top: 0;
 	width: 100%;
 }
@@ -262,5 +262,14 @@
   display: inline-block;
   padding: 0;
   position: relative;
-  margin: 0.4em 0.5em 0.4em 0.5em;
+  margin: 0.4em 0.5em 0 0.5em;
+}
+
+.dot-bg {
+	padding: 0;
+	background-color: rgba(247, 247, 242, 0.9);
+}
+
+.dot-bg:hover {
+	background-color: rgba(196, 212, 202, 0.9);
 }
