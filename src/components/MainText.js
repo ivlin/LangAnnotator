@@ -1,9 +1,10 @@
 import React from 'react';
 import Sidebar from 'react-sidebar';
-import { FaBars, FaTrash, FaChevronCircleDown, FaChevronCircleUp } from 'react-icons/fa'
+import { FaBars, FaTrash, FaChevronCircleDown, FaChevronCircleUp } from 'react-icons/fa';
 
 import Annotation from './Annotation'
 import AnnotationButton from './AnnotationButton'
+import SummaryPage from './SummaryPage'
 
 const colors = [
 	"#e88", //red
@@ -28,7 +29,8 @@ export default class MainText extends React.Component {
 			isShowHelp: true,
 			isShowImport: false, 
 			isShowImportAnnotations: false,
-			isShowExportAnnotations: false
+			isShowExportAnnotations: false,
+			isShowSummary: false
 		};
 
 		this.handleMouseUp = this.handleMouseUp.bind(this);
@@ -51,6 +53,7 @@ export default class MainText extends React.Component {
 		this.handleImportAnnotations = this.handleImportAnnotations.bind(this);
 		this.handleImportFileAnnotations = this.handleImportFileAnnotations.bind(this);
 		this.handleStartFileUpload = this.handleStartFileUpload.bind(this);
+		this.handleSummarizeAnnotations = this.handleSummarizeAnnotations.bind(this);
 	}
 
 	handleRerender(ann, color) { // update colors
@@ -107,7 +110,7 @@ export default class MainText extends React.Component {
         	}
         	var annotation = new Annotation();
         	annotation.description = input;
-        	annotation.selection = sel;
+        	annotation.selection = sel.toString();
         	annotation.color = colors[this.state.defaultColorInd];
         	this.styleSelection(sel, annotation, "textbody");
         	sel.empty();
@@ -309,6 +312,8 @@ export default class MainText extends React.Component {
 	render() {
 		var textbody = (
 			<div>
+				{ this.state.isShowSummary && 
+					<SummaryPage toggler={ this.handleSummarizeAnnotations } annotations={this.state.ANNOTATIONS}></SummaryPage> }
 				<div id="textbody" onMouseUp={this.handleMouseUp}>
 					{ this.state.textPanes }
 				</div>
@@ -318,6 +323,7 @@ export default class MainText extends React.Component {
 		var sidebarContent =
 			<div className="sideNav">
 				<p className="menuItem"  onClick={ this.handleExample }> Example </p>
+				<p className="menuItem"  onClick={ this.handleSummarizeAnnotations }> Annotations </p>
 				<p className="menuItem"  onClick={ this.handleShowImport }> Bulk Plaintext { this.state.isShowImport ? <FaChevronCircleUp/> : <FaChevronCircleDown/> }</p>
 				{
 					this.state.isShowImport &&
@@ -416,16 +422,16 @@ export default class MainText extends React.Component {
 	}
 
 	handleExample() {
-		var a1 = new Annotation(1, 19, 27, "cambiar - verb\nto change");
+		var a1 = new Annotation(1, 18, 26, "cambiar - verb\nto change", "cambiar");
 		a1.id = 1;
 		a1.color = colors[1];
-		var a2 = new Annotation(1, 42, 46, "emos/amos indicates that the pronoun is \"us\"");
+		var a2 = new Annotation(1, 42, 46, "emos/amos indicates that the pronoun is \"us\"", "emos");
 		a2.id = 2;
 		a2.color = colors[0];
-		var a3 = new Annotation(1, 99, 105, "cambiar");
+		var a3 = new Annotation(1, 99, 105, "cambiar", "change");
 		a3.id = 3;
 		a3.color = colors[1];
-		var a4 = new Annotation(1, 146, 162, "Guatemalan activist and Nobel Peace prize winner");
+		var a4 = new Annotation(1, 146, 162, "Guatemalan activist and Nobel Peace prize winner", "Rigoberta Menchu");
 		a4.id = 4;
 		a4.color = colors[3];
 
@@ -523,6 +529,10 @@ export default class MainText extends React.Component {
 		document.getElementById("annotationFileInput").click();
 	}
 
+	handleSummarizeAnnotations() {
+		this.setState({isShowSummary: !this.state.isShowSummary});
+	}
+
 	regenerateAnnotations(annotations) {
 		var regenerated = []
 		var temp;
@@ -561,5 +571,4 @@ export default class MainText extends React.Component {
 		}
 		return regenerated;
 	}
-
 }

@@ -273,3 +273,8 @@
 .dot-bg:hover {
 	background-color: rgba(196, 212, 202, 0.9);
 }
+
+#summary-modal {
+	font-size: 1.5rem;
+	overflow-y: scroll;
+}
