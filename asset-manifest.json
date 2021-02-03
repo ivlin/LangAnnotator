@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/LangAnnotator/static/css/main.ac728ab8.chunk.css",
-    "main.js": "/LangAnnotator/static/js/main.690129e5.chunk.js",
-    "main.js.map": "/LangAnnotator/static/js/main.690129e5.chunk.js.map",
+    "main.js": "/LangAnnotator/static/js/main.6d38674d.chunk.js",
+    "main.js.map": "/LangAnnotator/static/js/main.6d38674d.chunk.js.map",
     "runtime-main.js": "/LangAnnotator/static/js/runtime-main.942fcf5c.js",
     "runtime-main.js.map": "/LangAnnotator/static/js/runtime-main.942fcf5c.js.map",
     "static/js/2.be20daf6.chunk.js": "/LangAnnotator/static/js/2.be20daf6.chunk.js",
@@ -15,6 +15,6 @@
     "static/js/runtime-main.942fcf5c.js",
     "static/js/2.be20daf6.chunk.js",
     "static/css/main.ac728ab8.chunk.css",
-    "static/js/main.690129e5.chunk.js"
+    "static/js/main.6d38674d.chunk.js"
   ]
 }
