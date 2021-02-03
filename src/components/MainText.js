@@ -1,6 +1,6 @@
 import React from 'react';
 import Sidebar from 'react-sidebar';
-import { FaBars, FaTrash, FaChevronCircleDown, FaChevronCircleUp } from 'react-icons/fa';
+import { FaBars, FaTrash, FaChevronCircleDown, FaChevronCircleUp, FaCog, FaCogs, FaPaintBrush } from 'react-icons/fa';
 
 import Annotation from './Annotation'
 import AnnotationButton from './AnnotationButton'
@@ -30,10 +30,12 @@ export default class MainText extends React.Component {
 			isShowImport: false, 
 			isShowImportAnnotations: false,
 			isShowExportAnnotations: false,
-			isShowSummary: false
+			isShowSummary: false,
+			isAutoEditMode: true
 		};
 
-		this.handleMouseUp = this.handleMouseUp.bind(this);
+		this.handleAutoAnnotate = this.handleAutoAnnotate.bind(this);
+		this.handleAnnotate = this.handleAnnotate.bind(this);
 		this.handleRerender = this.handleRerender.bind(this);
 		this.handleAppend = this.handleAppend.bind(this);
 		this.handleAppendEnter = this.handleAppendEnter.bind(this);
@@ -54,6 +56,11 @@ export default class MainText extends React.Component {
 		this.handleImportFileAnnotations = this.handleImportFileAnnotations.bind(this);
 		this.handleStartFileUpload = this.handleStartFileUpload.bind(this);
 		this.handleSummarizeAnnotations = this.handleSummarizeAnnotations.bind(this);
+		this.handleEditMode = this.handleEditMode.bind(this);
+	}
+
+	handleEditMode() {
+		this.setState({ isAutoEditMode: !this.state.isAutoEditMode })
 	}
 
 	handleRerender(ann, color) { // update colors
@@ -98,7 +105,13 @@ export default class MainText extends React.Component {
 		this.setState(this.state);
 	}
 
-	handleMouseUp(e) {
+	handleAutoAnnotate(e) {
+		if (this.state.isAutoEditMode) {
+			this.handleAnnotate(e);
+		}
+	}
+
+	handleAnnotate(e) {
 		if (document.getElementsByClassName("modal").length){
 			return;
 		}
@@ -314,7 +327,7 @@ export default class MainText extends React.Component {
 			<div>
 				{ this.state.isShowSummary && 
 					<SummaryPage toggler={ this.handleSummarizeAnnotations } annotations={this.state.ANNOTATIONS}></SummaryPage> }
-				<div id="textbody" onMouseUp={this.handleMouseUp}>
+				<div id="textbody" onMouseUp={this.handleAutoAnnotate}>
 					{ this.state.textPanes }
 				</div>
 			</div>
@@ -351,8 +364,10 @@ export default class MainText extends React.Component {
 					<div>
 						<textarea id="import-annotations" style={ {width:"100%", fontSize: "0.75em", height:"12em"} }>
 						</textarea>
-						<button style={ {width:"50%", fontSize: "0.75em"} } onClick={this.handleImportAnnotations} type="button">Load</button>
-						<button style={ {width:"50%", fontSize: "0.75em"} } onClick={this.handleStartFileUpload} type="button">File Import</button>
+						<div>
+							<button style={ {width:"50%", fontSize: "0.75em"} } onClick={this.handleImportAnnotations} type="button">Load</button>
+							<button style={ {width:"50%", fontSize: "0.75em"} } onClick={this.handleStartFileUpload} type="button">File Import</button>
+						</div>
 						<input type="file" id="annotationFileInput" className="annotationImport" onChange={(e) => this.handleImportFileAnnotations(e)} />
 					</div>
 				}
@@ -361,7 +376,7 @@ export default class MainText extends React.Component {
 					this.state.isShowHelp &&
 					<div style={{fontSize: "0.75em", padding: "0 0.25em"}}>
 					<p>
-						<b>Highlight</b> a part of the text to add an annotation.
+						<b>Highlight</b> a part of the text to add an annotation. When in automatic mode, highlighting automatically creates an annotation dialog. When in manual mode, use the brush button at the bottom left to create the annotation for the highlighted text.
 					</p>
 					<p>
 						<b>Click</b> an annotation to view it or modify it.
@@ -417,6 +432,26 @@ export default class MainText extends React.Component {
 						</div>
 					</div>
 		    		{ textbody }
+		    		{ this.state.isAutoEditMode ?
+						<a href="#" class="float-option" onClick={ this.handleEditMode } style={{bottom:"40px", right:"40px"}} >
+							<div class="float-option-icon">
+								<FaCog/>
+							</div>
+							<br/>
+						</a> :
+						<div>
+						<a href="#" class="float-option" onClick={ this.handleAnnotate } style={{bottom:"120px", right:"40px"}} >
+							<div class="float-option-icon">
+								<FaPaintBrush/>
+							</div>
+						</a>
+						<a href="#" class="float-option" onClick={ this.handleEditMode } style={{ bottom:"40px", right:"40px"}} >
+							<div class="float-option-icon">
+								<FaCogs/>
+							</div>
+						</a>
+						</div>
+					}
 	    		</Sidebar>
 	    	);
 	}

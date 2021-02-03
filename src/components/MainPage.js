@@ -38,7 +38,7 @@ export default class MainPage extends React.Component {
     	     				<FaBars/>
         				</button>
         				<span>
-        					LangAnnotator
+        					LangAAnnotator
         				</span>
 		    		</div>
 

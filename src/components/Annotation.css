@@ -278,3 +278,22 @@
 	font-size: 1.5rem;
 	overflow-y: scroll;
 }
+
+.float-option{
+	position:fixed;
+	width:60px;
+	height:60px;
+	background-color:#233d4d;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+}
+
+.float-option:hover{
+	background-color:#567;
+}
+
+.float-option-icon{
+	margin-top:22px;
+}
