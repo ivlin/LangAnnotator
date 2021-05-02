@@ -433,23 +433,23 @@ export default class MainText extends React.Component {
 					</div>
 		    		{ textbody }
 		    		{ this.state.isAutoEditMode ?
-						<a href="#" class="float-option" onClick={ this.handleEditMode } style={{bottom:"40px", right:"40px"}} >
-							<div class="float-option-icon">
+						<div className="float-option" onClick={ this.handleEditMode } style={{bottom:"40px", right:"40px"}} >
+							<div className="float-option-icon">
 								<FaCog/>
 							</div>
 							<br/>
-						</a> :
+						</div> :
 						<div>
-						<a href="#" class="float-option" onClick={ this.handleAnnotate } style={{bottom:"120px", right:"40px"}} >
-							<div class="float-option-icon">
+						<div className="float-option" onClick={ this.handleAnnotate } style={{bottom:"120px", right:"40px"}} >
+							<div className="float-option-icon">
 								<FaPaintBrush/>
 							</div>
-						</a>
-						<a href="#" class="float-option" onClick={ this.handleEditMode } style={{ bottom:"40px", right:"40px"}} >
-							<div class="float-option-icon">
+						</div>
+						<div className="float-option" onClick={ this.handleEditMode } style={{ bottom:"40px", right:"40px"}} >
+							<div className="float-option-icon">
 								<FaCogs/>
 							</div>
-						</a>
+						</div>
 						</div>
 					}
 	    		</Sidebar>
@@ -570,11 +570,11 @@ export default class MainText extends React.Component {
 
 	regenerateAnnotations(annotations) {
 		var regenerated = []
-		var temp;
-		for (var i=0; i<annotations.length; i++){
-			temp = new Annotation(annotations[i]._depth, annotations[i]._start, annotations[i]._end, annotations[i]._description);
-			temp.id = annotations[i]._id; 
-			temp.color = annotations[i]._color;
+		for (let annotation of annotations){
+			let temp = new Annotation(annotation._depth, annotation._start, annotation._end, annotation._description, 
+				annotation._selection !== "" ? annotation._selection : annotation._description.slice(0, annotation._description.indexOf(" ")));
+			temp.id = annotation._id; 
+			temp.color = annotation._color;
 			regenerated.push(temp)
 		}
 		return regenerated;
@@ -582,25 +582,25 @@ export default class MainText extends React.Component {
 
 	regenerateTextPanes(annotations, ann_refs) {
 		var regenerated = [];
-		for (var i=0; i<annotations.length; i++){
-			if (typeof annotations[i] === 'string' || annotations[i] instanceof String) {
-				regenerated.push(annotations[i]);
+		for (let annotation of annotations){
+			if (typeof annotation === 'string' || annotation instanceof String) {
+				regenerated.push(annotation);
 			}
-			else if (annotations[i].type === "br") {
-				regenerated.push(<br key={ annotations[i].key }></br>);
+			else if (annotation.type === "br") {
+				regenerated.push(<br key={ annotation.key }></br>);
 			}
 			else {
 				regenerated.push(
 					<AnnotationButton
 						updater={ this.handleRerender }
 						deleter={ this.handleDeleteAnnotation }
-						key={ annotations[i].key }
-						depth={ annotations[i].props.depth }
-						annotation={ ann_refs[annotations[i].props.annotation._id - 1] }
-						color={ annotations[i].props.annotation.color }>
-						{ Array.isArray(annotations[i].props.children) ? 
-							this.regenerateTextPanes(annotations[i].props.children, ann_refs) :
-							this.regenerateTextPanes([annotations[i].props.children], ann_refs)[0] }
+						key={ annotation.key }
+						depth={ annotation.props.depth }
+						annotation={ ann_refs[annotation.props.annotation._id - 1] }
+						color={ annotation.props.annotation.color }>
+						{ Array.isArray(annotation.props.children) ? 
+							this.regenerateTextPanes(annotation.props.children, ann_refs) :
+							this.regenerateTextPanes([annotation.props.children], ann_refs)[0] }
 					</AnnotationButton>);
 			}
 		}

@@ -288,6 +288,7 @@
 	border-radius:50px;
 	text-align:center;
 	box-shadow: 2px 2px 3px #999;
+	cursor: pointer;
 }
 
 .float-option:hover{
@@ -296,4 +297,6 @@
 
 .float-option-icon{
 	margin-top:22px;
+	bottom:40px; 
+	right:40px;
 }
