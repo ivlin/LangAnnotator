@@ -112,15 +112,19 @@ export default class MainText extends React.Component {
 	}
 
 	handleAnnotate(e) {
+		console.log("ANNOTATING");
 		if (document.getElementsByClassName("modal").length){
 			return;
 		}
+		console.log(document.getSelection());
+		console.log(document.getSelection().toString());
 		if (document.getSelection() && document.getSelection().toString().length>0) {    // all browsers, except IE before version 9
 			var sel = document.getSelection();
         	var input = this.getUserInput();
         	if (!input){
         		return
         	}
+			console.log(input);
         	var annotation = new Annotation();
         	annotation.description = input;
         	annotation.selection = sel.toString();
@@ -131,6 +135,7 @@ export default class MainText extends React.Component {
 	}
 
 	getUserInput() {
+		console.log("GETTING USER INPUT");
 		return window.prompt("What is this annotation for?","");
 	}
 
@@ -364,7 +369,7 @@ export default class MainText extends React.Component {
 					<div>
 						<textarea id="import-annotations" style={ {width:"100%", fontSize: "0.75em", height:"12em"} }>
 						</textarea>
-						<div>
+						<div style={ { display: "flex", justifyContent: "center", alignContent: "center", flexDirection: "row" } }>
 							<button style={ {width:"50%", fontSize: "0.75em"} } onClick={this.handleImportAnnotations} type="button">Load</button>
 							<button style={ {width:"50%", fontSize: "0.75em"} } onClick={this.handleStartFileUpload} type="button">File Import</button>
 						</div>
@@ -440,7 +445,8 @@ export default class MainText extends React.Component {
 							<br/>
 						</div> :
 						<div>
-						<div className="float-option" onClick={ this.handleAnnotate } style={{bottom:"120px", right:"40px"}} >
+						// Some browsers reset selections on click
+						<div className="float-option" onMouseDown={ this.handleAnnotate } style={{bottom:"120px", right:"40px"}} >
 							<div className="float-option-icon">
 								<FaPaintBrush/>
 							</div>
