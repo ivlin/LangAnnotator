@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/LangAnnotator/static/css/main.ee3e1a14.chunk.css",
-    "main.js": "/LangAnnotator/static/js/main.3ca81b31.chunk.js",
-    "main.js.map": "/LangAnnotator/static/js/main.3ca81b31.chunk.js.map",
+    "main.css": "/LangAnnotator/static/css/main.de2df124.chunk.css",
+    "main.js": "/LangAnnotator/static/js/main.244b74f3.chunk.js",
+    "main.js.map": "/LangAnnotator/static/js/main.244b74f3.chunk.js.map",
     "runtime-main.js": "/LangAnnotator/static/js/runtime-main.942fcf5c.js",
     "runtime-main.js.map": "/LangAnnotator/static/js/runtime-main.942fcf5c.js.map",
     "static/js/2.9fbb3598.chunk.js": "/LangAnnotator/static/js/2.9fbb3598.chunk.js",
     "static/js/2.9fbb3598.chunk.js.map": "/LangAnnotator/static/js/2.9fbb3598.chunk.js.map",
     "index.html": "/LangAnnotator/index.html",
-    "static/css/main.ee3e1a14.chunk.css.map": "/LangAnnotator/static/css/main.ee3e1a14.chunk.css.map",
+    "static/css/main.de2df124.chunk.css.map": "/LangAnnotator/static/css/main.de2df124.chunk.css.map",
     "static/js/2.9fbb3598.chunk.js.LICENSE.txt": "/LangAnnotator/static/js/2.9fbb3598.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.942fcf5c.js",
     "static/js/2.9fbb3598.chunk.js",
-    "static/css/main.ee3e1a14.chunk.css",
-    "static/js/main.3ca81b31.chunk.js"
+    "static/css/main.de2df124.chunk.css",
+    "static/js/main.244b74f3.chunk.js"
   ]
 }
