@@ -381,7 +381,7 @@ export default class MainText extends React.Component {
 					this.state.isShowHelp &&
 					<div style={{fontSize: "0.75em", padding: "0 0.25em"}}>
 					<p>
-						<b>Highlight</b> a part of the text to add an annotation. When in automatic mode, highlighting automatically creates an annotation dialog. When in manual mode, use the brush button at the bottom left to create the annotation for the highlighted text.
+						<b>Highlight</b> a part of the text to add an annotation. When in automatic mode, highlighting automatically creates an annotation dialog. When in manual mode, use the brush button at the bottom right to create the annotation for the highlighted text. Toggle between modes using the bottom right gear icon.
 					</p>
 					<p>
 						<b>Click</b> an annotation to view it or modify it.
@@ -445,7 +445,6 @@ export default class MainText extends React.Component {
 							<br/>
 						</div> :
 						<div>
-						// Some browsers reset selections on click
 						<div className="float-option" onMouseDown={ this.handleAnnotate } style={{bottom:"120px", right:"40px"}} >
 							<div className="float-option-icon">
 								<FaPaintBrush/>
