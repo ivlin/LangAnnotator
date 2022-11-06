@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/LangAnnotator/static/css/main.ce86667f.chunk.css",
-    "main.js": "/LangAnnotator/static/js/main.dd75e6d2.chunk.js",
-    "main.js.map": "/LangAnnotator/static/js/main.dd75e6d2.chunk.js.map",
-    "runtime-main.js": "/LangAnnotator/static/js/runtime-main.942fcf5c.js",
-    "runtime-main.js.map": "/LangAnnotator/static/js/runtime-main.942fcf5c.js.map",
-    "static/js/2.9fbb3598.chunk.js": "/LangAnnotator/static/js/2.9fbb3598.chunk.js",
-    "static/js/2.9fbb3598.chunk.js.map": "/LangAnnotator/static/js/2.9fbb3598.chunk.js.map",
+    "main.css": "/LangAnnotator/static/css/main.e52aa066.css",
+    "main.js": "/LangAnnotator/static/js/main.a84633aa.js",
+    "static/js/787.f2dd05c8.chunk.js": "/LangAnnotator/static/js/787.f2dd05c8.chunk.js",
+    "static/media/fontawesome-webfont.svg?v=4.7.0": "/LangAnnotator/static/media/fontawesome-webfont.c1e38fd9e0e74ba58f7a.svg",
+    "static/media/fontawesome-webfont.eot": "/LangAnnotator/static/media/fontawesome-webfont.8b43027f47b20503057d.eot",
+    "static/media/fontawesome-webfont.ttf?v=4.7.0": "/LangAnnotator/static/media/fontawesome-webfont.1e59d2330b4c6deb84b3.ttf",
+    "static/media/fontawesome-webfont.woff?v=4.7.0": "/LangAnnotator/static/media/fontawesome-webfont.f691f37e57f04c152e23.woff",
+    "static/media/fontawesome-webfont.woff2?v=4.7.0": "/LangAnnotator/static/media/fontawesome-webfont.20fd1704ea223900efa9.woff2",
     "index.html": "/LangAnnotator/index.html",
-    "static/css/main.ce86667f.chunk.css.map": "/LangAnnotator/static/css/main.ce86667f.chunk.css.map",
-    "static/js/2.9fbb3598.chunk.js.LICENSE.txt": "/LangAnnotator/static/js/2.9fbb3598.chunk.js.LICENSE.txt"
+    "main.e52aa066.css.map": "/LangAnnotator/static/css/main.e52aa066.css.map",
+    "main.a84633aa.js.map": "/LangAnnotator/static/js/main.a84633aa.js.map",
+    "787.f2dd05c8.chunk.js.map": "/LangAnnotator/static/js/787.f2dd05c8.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.942fcf5c.js",
-    "static/js/2.9fbb3598.chunk.js",
-    "static/css/main.ce86667f.chunk.css",
-    "static/js/main.dd75e6d2.chunk.js"
+    "static/css/main.e52aa066.css",
+    "static/js/main.a84633aa.js"
   ]
 }
