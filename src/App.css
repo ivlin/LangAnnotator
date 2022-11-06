@@ -2,20 +2,40 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
 }
 
-.App-header {
+.App-link {
+  color: #61dafb;
+}
+
+.topnav .button {
+  border: none;
+  min-height: 100%;
+  color: black;
+  padding: 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.topnav .button:hover {
+  background-color: #819595;
+  color: white;
+}
+
+.topnav .active {
+  background-color: #D7816A;
+  color: white;
+}
+
+body {
   background-color: #282c34;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,15 +44,109 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.topnav {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  background-color: #e9e9e9;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.topnav .appendContainer {  
+  flex-grow: 1;
+  display: flex;
+}
+
+.topnav .appendContainer button[type=submit]{  
+  background-color: white;
+}
+
+.topnav .appendContainer button[type=submit]:hover{  
+  color: #D7816A;
+}
+
+.topnav input[type=text] {
+  width: 120px;
+  flex-grow: 1;
+  height: 100%;
+  padding: 0 20px;
+  font-size: 18px;
+  border: none;
+}
+
+.configOptions {
+  display: flex; 
+}
+
+.configOptions .configOption:hover {
+  display: flex;
+  background-color: #819595;
+  color: white !important;
+}
+
+.configOptions .configOption {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  cursor: pointer !important;
+  padding: 20px;
+}
+
+.configOptions a, .configOptions .configOption, .configOptions label {
+  color: black;
+  cursor: pointer !important;
+}
+
+.configOption:hover a, .configOption:hover .configOption, .configOption:hover label {
+  color: white;
+}
+
+.configOptions .button{
+  border: none;
+  min-height: 100%;
+  color: black;
+  padding: 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.helpTable .button{
+  border: none;
+  background: none;
+  float: left;
+}
+
+.helpTable .helpTableRow {
+  font-size: 16px;
+  text-align: left;
+}
+
+.colorPaletteOption {
+  border-radius: 50%;
+  border: none;
+  padding: 16px;
+  textAlign: center;
+  display: inline-block;
+  fontSize: 16px;
+  margin: 4px 2px;
+}
+
+.colorPaletteOption.active {
+  outline: 3px solid black;
+}
+
+.colorPaletteOption:hover {
+  outline: 3px solid lightslategrey;
+}
+
+.annotationManager .button {
+  margin: auto;
+  width: 25%;
+}
+
+.annotationManager .button:hover {
+  background-color: #819595;
+  color: white;
 }
