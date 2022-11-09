@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useCallback } from 'react';
 
-import { Color, Annotation, useAnnotationClass } from './MarkableTextElement';
+import { Color, Annotation, useAnnotationState } from './MarkableTextElement';
 
 type ColorPaletteProps = {
 	updateHandler: (color: Color) => void,
@@ -10,7 +10,7 @@ type ColorPaletteProps = {
 const ColorPalette: FunctionComponent<ColorPaletteProps> = (props) => {
 	const { updateHandler, selected } = props;
 	return <> 
-		{Object.values(Color).map(
+		{Object.values(Color).filter(color => color !== Color.White).map(
 			(color) => <button key={color} 
 			className={selected === color ? "colorPaletteOption active" : "colorPaletteOption"}
 			style={{backgroundColor: color}} onClick={ () => { updateHandler(color);} }>
@@ -31,14 +31,14 @@ export const AnnotationManager: FunctionComponent<AnnotationManagerProps> = (pro
 		annotation.comment = (ev.target as HTMLInputElement).innerText;
 	};
 
-	const [annotationClass, setAnnotationClass] = useAnnotationClass(annotation);
+	const [annotationClass, annotationHeight, setAnnotationState] = useAnnotationState(annotation);
 	const setAnnotationClassCallback = useCallback((color: Color) => {
-		setAnnotationClass(color);
-	}, [annotationClass]);
+		setAnnotationState(color, annotationHeight);
+	}, [annotationClass, annotationHeight]);
 
 	return (<div style={{
 				display: "block", position: "fixed", 
-				zIndex: 1, left: 0, top: 0, 
+				zIndex: 1, left: "50%", top: "50%", transform: "translate(-50%, -50%)", 
 				width: "100%", height: "100%", overflow: "auto", paddingTop: "250px", 
 				backgroundColor: "rgba(0,0,0,0.4)"
 			}}>

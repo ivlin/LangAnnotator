@@ -1,21 +1,24 @@
-import React, { FunctionComponent, useRef, useState, useCallback, useEffect } from 'react';
+import React, { ReactElement, FunctionComponent, useRef, useState, useCallback, useEffect } from 'react';
+import * as ReactDOM from 'react-dom';
 
 import { getAnnotationKey } from '../utils/KeyGlobals';
 
 export enum Color {
-	Red = "#e88", //red
-	Orange = "#ec5", //orange
-	Green = "#7a5", //green
-	Blue = "#48f", //blue
-	Violet = "#99e", //violet
-	Pink = "#e9d", //pink
-	White = "#fff" //white
+	Red = "#e88",
+	Orange = "#c64",
+	Yellow = "#ec5",
+	Green = "#7a5",
+	Blue = "#48f",
+	Teal = "#6ab",
+	Violet = "#99e",
+	Pink = "#e9d", 
+	Brown = "#b85",
+	White = "#fff"
 }
 
-type AnnotationSubscriber = (color: Color) => void;
+type AnnotationSubscriber = (color: Color, height: number) => void;
 
-//React.Dispatch<React.SetStateAction<Color>>
-export function useAnnotationClass(annotation: Annotation): [Color, (color: Color) => void] {	
+export function useAnnotationState(annotation: Annotation): [Color, number, (color: Color, height: number) => void] {	
 	const [hookState, setHookState] = useState("");
 	
 	function refreshHook(color: Color) {
@@ -23,16 +26,15 @@ export function useAnnotationClass(annotation: Annotation): [Color, (color: Colo
 	}
 
 	useEffect(() => {
-		console.log(annotation);
 		annotation.subscribe(refreshHook);
 		return () => { annotation.unsubscribe(refreshHook); };
 	});
 
-	function setAnnotationClass(annotationClass: Color): void {
-		annotation.setAnnotationClass(annotationClass);
+	function setAnnotationState(annotationClass: Color, annotationHeight: number): void {
+		annotation.setAnnotationState(annotationClass, annotationHeight);
 	}
 
-	return [annotation.annotationClass, setAnnotationClass];
+	return [annotation.annotationClass, annotation.annotationHeight, setAnnotationState];
 }
 
 export class Annotation {
@@ -40,9 +42,11 @@ export class Annotation {
 	annotationClass: Color;
 	subscribers: Array<AnnotationSubscriber>;
 	key: string;
+	annotationHeight: number;
 
-	constructor(annotationClass: Color, comment?: string) {
+	constructor(annotationClass: Color, annotationHeight: number, comment?: string) {
 		this.annotationClass = annotationClass;
+		this.annotationHeight = annotationHeight;
 		this.key = getAnnotationKey();
 		this.comment = comment ? comment : "";
 		this.subscribers = new Array<AnnotationSubscriber>();
@@ -56,9 +60,10 @@ export class Annotation {
 		this.subscribers = this.subscribers.filter(subscriber => subscriber !== fn);
 	}
 
-	setAnnotationClass(annotationClass: Color): void {
+	setAnnotationState(annotationClass: Color, annotationHeight: number): void {
 		this.annotationClass = annotationClass;
-		this.subscribers.forEach((fn: AnnotationSubscriber) => fn(this.annotationClass));
+		this.annotationHeight = annotationHeight;
+		this.subscribers.forEach((fn: AnnotationSubscriber) => fn(this.annotationClass, this.annotationHeight));
 	}
 }
 
@@ -85,11 +90,38 @@ export const MarkableTextElement: FunctionComponent<MarkableTextElementProps> = 
 		(ev.target as HTMLInputElement).style.color = data.annotations[0].annotationClass;
 	};
 
-	const [annotationClass, _] = useAnnotationClass(data.annotations[0]);
+	const [annotationClass, annotationHeight, _] = useAnnotationState(data.annotations[0]);
 
-	return (<span contentEditable={editMode} suppressContentEditableWarning={true}
+	const content = <span contentEditable={editMode} suppressContentEditableWarning={true}
 				data-key={data.key} onMouseUp={highlightHandler} onInput={inputCallback} onClick={hoverCallback}
-				style={{ color: annotationClass }}>
+				className="markableTextElement" style={{ color: annotationClass, lineHeight: 1.5 }}>
 		{ data.content }
-	</span>);
+	</span>;
+
+	return (<RecursiveMarkedText annotations={ data.annotations } content={ content } />);
+}
+
+type RecursiveMarkedTextProps = {
+	level?: number,
+	annotations: Annotation[], 
+	content: ReactElement
+}
+
+const RecursiveMarkedText: FunctionComponent<RecursiveMarkedTextProps> = (props) => {
+	const { level, annotations, content } = props;
+	const annotationIndex = level ? level : annotations.length;
+	const [hover, setHover] = useState(false);
+	const hoverUpdateCallback = useCallback((hover: boolean) => { setHover(hover) }, [hover]);
+
+	if (annotationIndex === 1) { 
+		return <span>{ content }</span>;
+	}
+	const inverseAnnotationIndex = annotations.length - annotationIndex;
+	const annotationColor = annotations[inverseAnnotationIndex].annotationClass;
+	
+	return <span className="annotationWrapper" onMouseEnter={() => { hoverUpdateCallback(true) }} onMouseLeave={() => { hoverUpdateCallback(false) }} 
+		style={{ borderBottom: "2px solid", backgroundColor: hover ? annotationColor : "transparent",
+		paddingBottom: `${(annotations[inverseAnnotationIndex].annotationHeight - 1)* 3}px`, borderBottomColor: annotationColor }}> 
+		{ <RecursiveMarkedText annotations={annotations} level={annotationIndex - 1} content={content}/> }
+	</span>;
 }

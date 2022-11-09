@@ -34,7 +34,7 @@ function App() {
   const [modalAnnotation, setModalAnnotation] = useState<Annotation>();
   const [configVisibility, setConfigVisibility] = useState(false);
   const [helpVisibility, setHelpVisibility] = useState(false);
-  const baseAnnotation = new Annotation(Color.White, "");
+  const baseAnnotation = new Annotation(Color.White, 0, "");
 
   // Callbacks
   // Create a new element
@@ -84,58 +84,69 @@ function App() {
       return;
     }
 
-    const startNode = selection.anchorNode;
-    const startKey = startNode?.parentElement?.dataset?.key;
-    const endNode = selection.focusNode;
-    const endKey = endNode?.parentElement?.dataset?.key;
+    let startNode = selection.anchorNode;
+    let startOffset = selection.anchorOffset;
+    let startKey = startNode?.parentElement?.dataset?.key;
+    let endNode = selection.focusNode;
+    let endOffset = selection.focusOffset;
+    let endKey = endNode?.parentElement?.dataset?.key;
 
-    if (startKey === endKey && selection.anchorOffset === selection.focusOffset){
+    if (startKey === endKey && startOffset === endOffset) {
       const keyedItem = getAnnotationByKey(content, startKey!);
       if (keyedItem && keyedItem.annotations.length > 1) {
         setModalAnnotation(keyedItem.annotations[0]);
       }
       return;
     }
+    else if (content.findIndex(itm => itm.key === startKey) > content.findIndex(itm => itm.key === endKey) || 
+      (content.findIndex(itm => itm.key === startKey) === content.findIndex(itm => itm.key === endKey) && startOffset > endOffset)) {
+      [startNode, startOffset, startKey, endNode, endOffset, endKey] = [endNode, endOffset, endKey, startNode, startOffset, startKey]  
+    }
 
-    const newAnnotation = new Annotation(Color.Pink, "");
+    const newAnnotation = new Annotation(Color.Red, 1, "");
     const updatedContent: MarkableTextItem[] = [];
     let start = false;
     let end = false;
+    let overlappingAnnotationHeights = new Set();
 
     content.forEach((itm) => {
       const contentLength = itm.content.length;
-      const startOffset = itm.key === startKey ? selection.anchorOffset : 0;
-      const endOffset = itm.key === endKey ? selection.focusOffset : itm.content.length;
+      const startItemOffset = itm.key === startKey ? startOffset : 0;
+      const endItemOffset = itm.key === endKey ? endOffset : itm.content.length;
 
       start = start || itm.key === startKey;
-      if (startOffset > 0) {
+      if (startItemOffset > 0) {
         updatedContent.push({
           key: getContentItemKey(),
-          content: itm.content.substr(0, startOffset),
+          content: itm.content.substr(0, startItemOffset),
           annotations: [...itm.annotations]
         });
       }
       
       const updatedAnnotations = [...itm.annotations];
       if (start && !end) {
+        updatedAnnotations.forEach(annotation => { overlappingAnnotationHeights.add(annotation.annotationHeight ); });
         updatedAnnotations.unshift(newAnnotation);
       }
       updatedContent.push({
           key: itm.key,
-          content: itm.content.substr(startOffset, endOffset - startOffset),
+          content: itm.content.substr(startItemOffset, endItemOffset - startItemOffset),
           annotations: updatedAnnotations
         });
 
       end = end || itm.key === endKey;
-      if (endOffset < contentLength) {
+      if (endItemOffset < contentLength) {
         updatedContent.push({
           key: getContentItemKey(),
-          content: itm.content.substr(endOffset),
+          content: itm.content.substr(endItemOffset),
           annotations: [...itm.annotations]
         });
       }
     });
 
+    while (overlappingAnnotationHeights.has(newAnnotation.annotationHeight)) {
+      newAnnotation.annotationHeight += 1;
+    }
     setContent(updatedContent);
     setModalAnnotation(newAnnotation);
   }, [content, editMode, modalAnnotation]);
@@ -156,6 +167,7 @@ function App() {
         <TextInputController appendHandler={appendContent} editMode={editMode} 
           toggleEditModeHandler={toggleEditModeCallback} toggleConfigModal={toggleConfigVisibility} 
           toggleHelpModal={toggleHelpVisibility} />
+        <div className="modeDescriptor">{ editMode ? "Mode: Edit" : "Mode: Highlight" }</div>
       </header>
       <div className="App-body">
         <TextDisplay content={content} highlightCallback={splitContent} editMode={editMode} />
@@ -165,6 +177,9 @@ function App() {
         { configVisibility && <ConfigModal hideConfigHandler={toggleConfigVisibility} appState={appState} 
             resetAppState={updateAppStateCallback}/> }
         { helpVisibility && <HelpModal hideHelpHandler={toggleHelpVisibility} /> }
+      </div>
+      <div className="appFooter">
+        LangAnnotator
       </div>
     </div>
   );

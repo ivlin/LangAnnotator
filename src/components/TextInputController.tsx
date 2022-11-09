@@ -22,7 +22,7 @@ export const TextInputController: FunctionComponent<TextInputControllerProp> = (
 	return (
 		<div className="topnav">
 			<form className="appendContainer">
-				<input type="text" ref={inputRef}/>
+				<input type="text" ref={inputRef} placeholder={"Append new notes or edit existing ones directly below"} />
 				<button className="button" type="submit" onClick={submitCallback}><i className="fa fa-plus fa-lg"></i></button>
 			</form>
 			<div className="optionListContainer">

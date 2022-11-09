@@ -149,4 +149,32 @@ body {
 .annotationManager .button:hover {
   background-color: #819595;
   color: white;
+  cursor: pointer;
+}
+
+.appFooter {
+  position: fixed;
+  padding: 0.5em;
+  opacity: 0.9;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  font-size: 0.5em;
+  background-color: rgba(0,0,0,0.5); 
+  color: white;
+  bottom: 0;
+}
+
+.modeDescriptor {
+  position: fixed;
+  padding: 0.5em;
+  opacity: 0.9;
+  right: 0;
+  border-radius: 5px;
+  font-size: 0.85em;
+  background-color: rgba(15,15,15,0.7); 
+  color: white;
+}
+
+.annotationWrapper:hover * {
+  color: white !important;
 }

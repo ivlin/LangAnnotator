@@ -32,7 +32,7 @@ export const loadDataFromJson = function(jsonString: string) {
 			contentItem.annotations.forEach(
 				(annotation: Annotation) => {
 					if (!annotationMap.has(annotation.key)) {
-						annotationMap.set(annotation.key, new Annotation(annotation.annotationClass, annotation.comment));
+						annotationMap.set(annotation.key, new Annotation(annotation.annotationClass, annotation.annotationHeight, annotation.comment));
 					}
 					annotationSubscription.push(annotationMap.get(annotation.key)!);
 				});
