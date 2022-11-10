@@ -93,7 +93,7 @@ export const MarkableTextElement: FunctionComponent<MarkableTextElementProps> = 
 	const [annotationClass, annotationHeight, _] = useAnnotationState(data.annotations[0]);
 
 	const content = <span contentEditable={editMode} suppressContentEditableWarning={true}
-				data-key={data.key} onMouseUp={highlightHandler} onInput={inputCallback} onClick={hoverCallback}
+				data-key={data.key} onPointerUp={highlightHandler} onInput={inputCallback} onClick={hoverCallback}
 				className="markableTextElement" style={{ color: annotationClass, lineHeight: 1.5 }}>
 		{ data.content }
 	</span>;
