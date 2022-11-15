@@ -92,10 +92,6 @@ function App() {
     let endKey = endNode?.parentElement?.dataset?.key;
 
     if (startKey === endKey && startOffset === endOffset) {
-      const keyedItem = getAnnotationByKey(content, startKey!);
-      if (keyedItem && keyedItem.annotations.length > 1) {
-        setModalAnnotation(keyedItem.annotations[0]);
-      }
       return;
     }
     else if (content.findIndex(itm => itm.key === startKey) > content.findIndex(itm => itm.key === endKey) || 
@@ -159,7 +155,8 @@ function App() {
   const toggleConfigVisibility = useCallback(() => setConfigVisibility(!configVisibility), [configVisibility])
   const toggleHelpVisibility = useCallback(() => setHelpVisibility(!helpVisibility), [helpVisibility]);
   const hideAnnotationCallback = useCallback(() => setModalAnnotation(undefined), [modalAnnotation]);
-  
+  const openAnnotationCallback = useCallback((annotation: Annotation) => setModalAnnotation(annotation), [modalAnnotation]);
+
   const appState: AppState = {content: content, annotations: []};
   return (
     <div className="App">
@@ -170,7 +167,7 @@ function App() {
         <div className="modeDescriptor">{ editMode ? "Mode: Edit" : "Mode: Highlight" }</div>
       </header>
       <div className="App-body">
-        <TextDisplay content={content} highlightCallback={splitContent} editMode={editMode} />
+        <TextDisplay content={content} openAnnotationCallback={openAnnotationCallback} highlightCallback={splitContent} editMode={editMode} />
         { modalAnnotation && <AnnotationManager annotation={modalAnnotation} 
             hideAnnotationHandler={hideAnnotationCallback}
             deleteHandler={deleteAnnotationHandler} /> }

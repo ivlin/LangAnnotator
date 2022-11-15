@@ -1,20 +1,22 @@
 import React, { FunctionComponent, useCallback } from 'react';
-import { MarkableTextElement, MarkableTextItem } from './MarkableTextElement';
+import { Annotation, MarkableTextElement, MarkableTextItem } from './MarkableTextElement';
 
 type TextDisplayProps = {
 	content: MarkableTextItem[],
 	editMode: boolean,
-	highlightCallback: () => void
+	highlightCallback: () => void,
+	openAnnotationCallback: (annotation: Annotation) => void
 }
 
 export const TextDisplay: FunctionComponent<TextDisplayProps> = (props) => {
-	const { content, highlightCallback, editMode } = props;
+	const { content, highlightCallback, editMode, openAnnotationCallback } = props;
 
 	return <div style={{width: "95%", textAlign: "left", paddingLeft: "5px", 
 					margin: "5px", whiteSpace: "pre-line"}}>
 		{
 			content.map((dataEl, ind) => 
-				<MarkableTextElement key={dataEl.key} data={dataEl} editMode={editMode} highlightHandler={highlightCallback} />)
+				<MarkableTextElement key={dataEl.key} data={dataEl} editMode={editMode} 
+				openAnnotationCallback={openAnnotationCallback} highlightHandler={highlightCallback} />)
 		}
 	</div>;
 }

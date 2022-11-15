@@ -130,15 +130,15 @@ body {
   textAlign: center;
   display: inline-block;
   fontSize: 16px;
-  margin: 4px 2px;
-}
-
-.colorPaletteOption.active {
-  outline: 3px solid black;
+  margin: 8px 5px;
 }
 
 .colorPaletteOption:hover {
-  outline: 3px solid lightslategrey;
+  outline: 3px solid lightblue;
+}
+
+.colorPaletteOption.active {
+  outline: 3px solid black !important;
 }
 
 .annotationManager .button {
