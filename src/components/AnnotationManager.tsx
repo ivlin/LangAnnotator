@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useCallback } from 'react';
-
+import { useKeyPress } from './ShortcutHandler';
 import { Color, Annotation, useAnnotationState } from './MarkableTextElement';
 
 type ColorPaletteProps = {
@@ -35,6 +35,7 @@ export const AnnotationManager: FunctionComponent<AnnotationManagerProps> = (pro
 	const setAnnotationClassCallback = useCallback((color: Color) => {
 		setAnnotationState(color, annotationHeight);
 	}, [annotationClass, annotationHeight]);
+	useKeyPress(["Escape"], hideAnnotationHandler)
 
 	return (<div style={{
 				display: "block", position: "fixed", 

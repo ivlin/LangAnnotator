@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react';
+import { useKeyPress } from './ShortcutHandler';
 
 type HelpModalProps = {
 	hideHelpHandler: () => void
@@ -6,6 +7,8 @@ type HelpModalProps = {
 
 export const HelpModal: FunctionComponent<HelpModalProps> = (props: HelpModalProps) => {
 	const { hideHelpHandler } = props;
+	useKeyPress(["Escape"], hideHelpHandler);
+
 	return (<div style={{
 				display: "block", position: "fixed", 
 				zIndex: 1, left: 0, top: 0, 

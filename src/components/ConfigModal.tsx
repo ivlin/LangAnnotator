@@ -1,4 +1,6 @@
 import React, { FunctionComponent, useState, useRef } from 'react';
+import { useKeyPress } from './ShortcutHandler';
+
 import { AppState, getAppState, getUrlForString, loadDataFromJson, getContentFromFile } from '../utils/DataExport';
 
 type ConfigModalProps = {
@@ -19,6 +21,8 @@ export const ConfigModal: FunctionComponent<ConfigModalProps> = (props: ConfigMo
 			return;
 		})
 	};
+
+	useKeyPress(["Escape"], hideConfigHandler);
 
 	return (<div style={{
 				display: "block", position: "fixed", 
