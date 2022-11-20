@@ -31,7 +31,7 @@ function App() {
   // State
   const [content, setContent] = useState<MarkableTextItem[]>([]);
   const [editMode, setEditMode] = useState(false);
-  const [modalAnnotation, setModalAnnotation] = useState<Annotation>();
+  const [modalAnnotations, setModalAnnotations] = useState<Annotation[]>([]);
   const [configVisibility, setConfigVisibility] = useState(false);
   const [helpVisibility, setHelpVisibility] = useState(false);
   const baseAnnotation = new Annotation(Color.White, 0, "");
@@ -75,7 +75,7 @@ function App() {
       }
     });
     setContent(reducedContents);
-    setModalAnnotation(undefined);
+    setModalAnnotations([]);
   }, [content]);
 
   const splitContent = useCallback(() => {
@@ -144,8 +144,8 @@ function App() {
       newAnnotation.annotationHeight += 1;
     }
     setContent(updatedContent);
-    setModalAnnotation(newAnnotation);
-  }, [content, editMode, modalAnnotation]);
+    setModalAnnotations([newAnnotation]);
+  }, [content, editMode, modalAnnotations]);
 
   const updateAppStateCallback = useCallback((appState: AppState) => {
     setContent(appState.content);
@@ -154,8 +154,8 @@ function App() {
   const toggleEditModeCallback = useCallback(() => setEditMode(!editMode), [editMode]);
   const toggleConfigVisibility = useCallback(() => setConfigVisibility(!configVisibility), [configVisibility])
   const toggleHelpVisibility = useCallback(() => setHelpVisibility(!helpVisibility), [helpVisibility]);
-  const hideAnnotationCallback = useCallback(() => setModalAnnotation(undefined), [modalAnnotation]);
-  const openAnnotationCallback = useCallback((annotation: Annotation) => setModalAnnotation(annotation), [modalAnnotation]);
+  const hideAnnotationCallback = useCallback(() => setModalAnnotations([]), [modalAnnotations]);
+  const openAnnotationCallback = useCallback((annotations: Annotation[]) => setModalAnnotations(annotations), [modalAnnotations]);
 
   const appState: AppState = {content: content, annotations: []};
   return (
@@ -168,7 +168,7 @@ function App() {
       </header>
       <div className="App-body">
         <TextDisplay content={content} openAnnotationCallback={openAnnotationCallback} highlightCallback={splitContent} editMode={editMode} />
-        { modalAnnotation && <AnnotationManager annotation={modalAnnotation} 
+        { modalAnnotations.length > 0 && <AnnotationManager annotations={modalAnnotations} 
             hideAnnotationHandler={hideAnnotationCallback}
             deleteHandler={deleteAnnotationHandler} /> }
         { configVisibility && <ConfigModal hideConfigHandler={toggleConfigVisibility} appState={appState} 

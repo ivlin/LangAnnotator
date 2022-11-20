@@ -5,7 +5,7 @@ type TextDisplayProps = {
 	content: MarkableTextItem[],
 	editMode: boolean,
 	highlightCallback: () => void,
-	openAnnotationCallback: (annotation: Annotation) => void
+	openAnnotationCallback: (annotations: Annotation[]) => void
 }
 
 export const TextDisplay: FunctionComponent<TextDisplayProps> = (props) => {

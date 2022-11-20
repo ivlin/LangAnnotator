@@ -77,7 +77,7 @@ type MarkableTextElementProps = {
 	data: MarkableTextItem,
 	editMode: boolean,
 	highlightHandler: () => void,
-	openAnnotationCallback: (annotation: Annotation) => void
+	openAnnotationCallback: (annotations: Annotation[]) => void
 }
 
 export const MarkableTextElement: FunctionComponent<MarkableTextElementProps> = (props) => {
@@ -89,6 +89,7 @@ export const MarkableTextElement: FunctionComponent<MarkableTextElementProps> = 
 
 	const hoverCallback = (ev: React.SyntheticEvent) => {
 		(ev.target as HTMLInputElement).style.color = data.annotations[0].annotationClass;
+		openAnnotationCallback(data.annotations.slice(0, data.annotations.length - 1));
 	};
 
 	const [annotationClass, annotationHeight, _] = useAnnotationState(data.annotations[0]);
@@ -99,18 +100,17 @@ export const MarkableTextElement: FunctionComponent<MarkableTextElementProps> = 
 		{ data.content }
 	</span>;
 
-	return (<RecursiveMarkedText annotations={ data.annotations } openAnnotationCallback={ openAnnotationCallback } content={ content } />);
+	return (<RecursiveMarkedText annotations={ data.annotations } content={ content } />);
 }
 
 type RecursiveMarkedTextProps = {
 	level?: number,
 	annotations: Annotation[],
 	content: ReactElement,
-	openAnnotationCallback: (annotation: Annotation) => void
 }
 
 const RecursiveMarkedText: FunctionComponent<RecursiveMarkedTextProps> = (props) => {
-	const { level, annotations, content, openAnnotationCallback } = props;
+	const { level, annotations, content } = props;
 	const annotationIndex = level ? level : annotations.length;
 	const [hover, setHover] = useState(false);
 	const hoverUpdateCallback = useCallback((hover: boolean) => { setHover(hover) }, [hover]);
@@ -125,13 +125,11 @@ const RecursiveMarkedText: FunctionComponent<RecursiveMarkedTextProps> = (props)
 				onMouseEnter={() => { hoverUpdateCallback(true) }} 
 				onMouseLeave={() => { hoverUpdateCallback(false) }} 
 				onMouseUp={ () => { hoverUpdateCallback(false) }}
-				onClick={ () => { openAnnotationCallback(annotations[inverseAnnotationIndex]) } } 
 		style={{ 
 			borderBottom: "2px solid", 
 			backgroundColor: hover ? annotationColor : "transparent",
 			paddingBottom: `${(annotations[inverseAnnotationIndex].annotationHeight - 1)* 3}px`, 
 			borderBottomColor: annotationColor,}}> 
-		{ <RecursiveMarkedText annotations={annotations} openAnnotationCallback={ openAnnotationCallback } 
-			level={annotationIndex - 1} content={content}/> }
+		{ <RecursiveMarkedText annotations={annotations} level={annotationIndex - 1} content={content}/> }
 	</span>;
 }

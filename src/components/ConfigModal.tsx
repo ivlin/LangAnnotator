@@ -24,22 +24,10 @@ export const ConfigModal: FunctionComponent<ConfigModalProps> = (props: ConfigMo
 
 	useKeyPress(["Escape"], hideConfigHandler);
 
-	return (<div style={{
-				display: "block", position: "fixed", 
-				zIndex: 1, left: 0, top: 0, 
-				width: "100%", height: "100%", overflow: "auto", paddingTop: "250px", 
-				backgroundColor: "rgba(0,0,0,0.4)"
-			}}>
-			<div style={{
-				backgroundColor: "#DDD", margin: "auto",
-				padding: "15px", width: "80%", color: "black"
-			}}>
-				<div>
-	    			<span onClick={hideConfigHandler} style={{
-	    				color: "black", textDecoration: "none", cursor: "pointer", float: "right"
-	    			}}>
-	  					<i className="fa fa-close"></i>
-	  				</span>
+	return (<div className="modalBackground">
+			<div className="modalContent">
+				<div onClick={hideConfigHandler} className="headerRightItem buttonHighlighting">
+  					<i className="fa fa-close"></i>
   				</div>
 				<div className="configOptions">
 					<div className="configOption"> 

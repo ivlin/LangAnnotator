@@ -9,23 +9,11 @@ export const HelpModal: FunctionComponent<HelpModalProps> = (props: HelpModalPro
 	const { hideHelpHandler } = props;
 	useKeyPress(["Escape"], hideHelpHandler);
 
-	return (<div style={{
-				display: "block", position: "fixed", 
-				zIndex: 1, left: 0, top: 0, 
-				width: "100%", height: "100%", overflow: "auto", paddingTop: "250px", 
-				backgroundColor: "rgba(0,0,0,0.4)"
-			}}>
-			<div style={{
-				backgroundColor: "#DDD", margin: "auto",
-				padding: "15px", width: "80%", color: "black"
-			}}>
-				<div>
-					<span onClick={hideHelpHandler} style={{
-						color: "black", textDecoration: "none", cursor: "pointer", float: "right"
-					}}>
-						<i className="fa fa-close"></i>
-					</span>
-				</div>
+	return (<div className="modalBackground">
+			<div className="modalContent">
+				<div onClick={hideHelpHandler} className="headerRightItem buttonHighlighting">
+  					<i className="fa fa-close"></i>
+  				</div>
 				<div>
 					Help
 					<hr />

@@ -1,3 +1,8 @@
+:root {
+  --button-active-color: #D7816A;
+  --hover-hightlight-color: #819595;
+}
+
 .App {
   text-align: center;
 }
@@ -24,13 +29,8 @@
   cursor: pointer;
 }
 
-.topnav .button:hover {
-  background-color: #819595;
-  color: white;
-}
-
 .topnav .active {
-  background-color: #D7816A;
+  background-color: var(--button-active-color);
   color: white;
 }
 
@@ -61,7 +61,7 @@ body {
 }
 
 .topnav .appendContainer button[type=submit]:hover{  
-  color: #D7816A;
+  color: var(--hover-hightlight-color);
 }
 
 .topnav input[type=text] {
@@ -79,7 +79,7 @@ body {
 
 .configOptions .configOption:hover {
   display: flex;
-  background-color: #819595;
+  background-color: var(--hover-hightlight-color);
   color: white !important;
 }
 
@@ -123,13 +123,11 @@ body {
   text-align: left;
 }
 
-.colorPaletteOption {
+.colorButton {
   border-radius: 50%;
   border: none;
   padding: 16px;
-  textAlign: center;
   display: inline-block;
-  fontSize: 16px;
   margin: 8px 5px;
 }
 
@@ -141,13 +139,17 @@ body {
   outline: 3px solid black !important;
 }
 
-.annotationManager .button {
+.modalContent .headerRightItem {
   margin: auto;
-  width: 25%;
+  text-decoration: none;
+  cursor: pointer;
+  float: right;
+  font-size: 32px;
+  padding: 0 5px;
 }
 
-.annotationManager .button:hover {
-  background-color: #819595;
+.buttonHighlighting:hover {
+  background-color: var(--hover-hightlight-color);
   color: white;
   cursor: pointer;
 }
@@ -177,4 +179,31 @@ body {
 
 .annotationWrapper:hover * {
   color: white !important;
+}
+
+.react-tabs__tab-list {
+  width: 80%;
+  margin: 0 auto !important;
+}
+
+.modalBackground {
+  display: block;
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%); 
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  padding-top: 250px;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modalContent {
+  background-color: #DDD;
+  margin: auto;
+  padding: 15px;
+  width: 80%;
+  color: black;
 }

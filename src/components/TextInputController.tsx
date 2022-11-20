@@ -26,10 +26,18 @@ export const TextInputController: FunctionComponent<TextInputControllerProp> = (
 				<button className="button" type="submit" onClick={submitCallback}><i className="fa fa-plus fa-lg"></i></button>
 			</form>
 			<div className="optionListContainer">
-				<button className={editMode ? "button" : "button active"} onClick={toggleEditModeHandler}><i className="fa fa-magic fa-lg"></i></button>
-				<button className={editMode ? "button active" : "button"} onClick={toggleEditModeHandler}><i className="fa fa-edit fa-lg"></i></button>
-				<button className="button" onClick={toggleConfigModal}><i className="fa fa-cog fa-lg"></i></button>
-				<button className="button" onClick={toggleHelpModal}><i className="fa fa-question fa-lg"></i></button>
+				<button className={`${!editMode && "active"} button buttonHighlighting`} onClick={toggleEditModeHandler}>
+					<i className="fa fa-magic fa-lg"></i>
+				</button>
+				<button className={`${editMode && "active"} button buttonHighlighting`} onClick={toggleEditModeHandler}>
+					<i className="fa fa-edit fa-lg"></i>
+				</button>
+				<button className="button buttonHighlighting" onClick={toggleConfigModal}>
+					<i className="fa fa-cog fa-lg"></i>
+				</button>
+				<button className="button buttonHighlighting" onClick={toggleHelpModal}>
+					<i className="fa fa-question fa-lg"></i>
+				</button>
 			</div>
 		</div>
 		);		
