@@ -40,8 +40,11 @@ type AnnotationPanelProps = {
 
 export const AnnotationTabTitle: FunctionComponent<AnnotationTabTitleProps> = (props) => {
 	const { annotation } = props;
-	const [annotationClass, _annotationHeight, _setAnnotationClass] = useAnnotationState(annotation);
-	return <button className="colorButton" style={{backgroundColor: annotation.annotationClass}}></button>;
+	const [annotationClass, _annotationHeight, label, _setAnnotationClass] = useAnnotationState(annotation);
+	return (<> 
+				<button className="colorButton" style={{backgroundColor: annotation.annotationClass}}></button>
+				<span> { label }</span>
+			</>);
 }
 
 export const AnnotationManager: FunctionComponent<AnnotationManagerProps> = (props) => {
@@ -53,7 +56,9 @@ export const AnnotationManager: FunctionComponent<AnnotationManagerProps> = (pro
 				<Tabs>
 				<TabList>
 					{ annotations.map((ann, ind) => 
-						<Tab key={ind}> <AnnotationTabTitle annotation={ann}/> </Tab>) }
+						<Tab key={ind}> 
+							<AnnotationTabTitle annotation={ann}/> 
+						</Tab>) }
 				</TabList>
 					{ annotations.map((ann, ind) => 
 						<TabPanel key={ind}>
@@ -67,14 +72,24 @@ export const AnnotationManager: FunctionComponent<AnnotationManagerProps> = (pro
 
 export const AnnotationPanel: FunctionComponent<AnnotationPanelProps> = (props) => {
 	const { annotation, deleteHandler, hideAnnotationHandler } = props;
-	const inputCallback = (ev: React.SyntheticEvent) => {
+
+	const [annotationClass, annotationHeight, label, setAnnotationState] = useAnnotationState(annotation);
+	
+	const setAnnotationClassCallback = useCallback((color: Color) => {
+		setAnnotationState(color, annotationHeight, label);
+	}, [annotationClass, label]);
+
+
+	const setAnnotationLabelCallback = useCallback((newLabel: string) => {
+		setAnnotationState(annotationClass, annotationHeight, newLabel)
+	}, [annotationClass, label]);
+
+	const labelUpdate = (ev: React.SyntheticEvent) => {
+		setAnnotationLabelCallback((ev.target as HTMLInputElement).innerText);
+	};
+	const commentUpdate = (ev: React.SyntheticEvent) => {
 		annotation.comment = (ev.target as HTMLInputElement).innerText;
 	};
-
-	const [annotationClass, annotationHeight, setAnnotationState] = useAnnotationState(annotation);
-	const setAnnotationClassCallback = useCallback((color: Color) => {
-		setAnnotationState(color, annotationHeight);
-	}, [annotationClass, annotationHeight]);
 
 	return <div className="annotationManager modalContent">
     			<div onClick={hideAnnotationHandler} className="headerRightItem buttonHighlighting">
@@ -82,8 +97,15 @@ export const AnnotationPanel: FunctionComponent<AnnotationPanelProps> = (props) 
   				</div>
 				<ColorPalette updateHandler={setAnnotationClassCallback} selected={annotationClass} />
   				<br />
+  				<div style={{display: "flex", flexDirection: "row"}}>
+  					<div> Title: </div>			
+					<div style={{border: "1px solid black", whiteSpace: "pre-line"}}
+						contentEditable suppressContentEditableWarning onInput={labelUpdate}>
+						{annotation.label}
+					</div>	
+				</div>
 				<div style={{border: "1px solid black", whiteSpace: "pre-line"}}
-					contentEditable suppressContentEditableWarning onInput={inputCallback}>
+					contentEditable suppressContentEditableWarning onInput={commentUpdate}>
 					{annotation.comment}
 				</div>
 				<div className="buttonHighlighting" style={{padding: "15px"}} onClick={() => deleteHandler(annotation)}>

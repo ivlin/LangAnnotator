@@ -16,9 +16,9 @@ export enum Color {
 	White = "#fff"
 }
 
-type AnnotationSubscriber = (color: Color, height: number) => void;
+type AnnotationSubscriber = (color: Color, height: number, label: string) => void;
 
-export function useAnnotationState(annotation: Annotation): [Color, number, (color: Color, height: number) => void] {	
+export function useAnnotationState(annotation: Annotation): [Color, number, string, (color: Color, height: number, label: string) => void] {	
 	const [hookState, setHookState] = useState("");
 	
 	function refreshHook(color: Color) {
@@ -30,24 +30,29 @@ export function useAnnotationState(annotation: Annotation): [Color, number, (col
 		return () => { annotation.unsubscribe(refreshHook); };
 	});
 
-	function setAnnotationState(annotationClass: Color, annotationHeight: number): void {
-		annotation.setAnnotationState(annotationClass, annotationHeight);
+	function setAnnotationState(annotationClass: Color, annotationHeight: number, label: string): void {
+		annotation.setAnnotationState(annotationClass, annotationHeight, label);
 	}
 
-	return [annotation.annotationClass, annotation.annotationHeight, setAnnotationState];
+	return [annotation.annotationClass, 
+		annotation.annotationHeight, 
+		annotation.label, 
+		setAnnotationState];
 }
 
 export class Annotation {
+	label: string;
 	comment: string;
 	annotationClass: Color;
 	subscribers: Array<AnnotationSubscriber>;
 	key: string;
 	annotationHeight: number;
 
-	constructor(annotationClass: Color, annotationHeight: number, comment?: string) {
+	constructor(annotationClass: Color, annotationHeight: number, label?: string, comment?: string) {
 		this.annotationClass = annotationClass;
 		this.annotationHeight = annotationHeight;
 		this.key = getAnnotationKey();
+		this.label = label ? label : "TEST LABEL";
 		this.comment = comment ? comment : "";
 		this.subscribers = new Array<AnnotationSubscriber>();
 	}
@@ -60,10 +65,11 @@ export class Annotation {
 		this.subscribers = this.subscribers.filter(subscriber => subscriber !== fn);
 	}
 
-	setAnnotationState(annotationClass: Color, annotationHeight: number): void {
+	setAnnotationState(annotationClass: Color, annotationHeight: number, label: string): void {
 		this.annotationClass = annotationClass;
+		this.label = label;
 		this.annotationHeight = annotationHeight;
-		this.subscribers.forEach((fn: AnnotationSubscriber) => fn(this.annotationClass, this.annotationHeight));
+		this.subscribers.forEach((fn: AnnotationSubscriber) => fn(this.annotationClass, this.annotationHeight, this.label));
 	}
 }
 
@@ -92,7 +98,7 @@ export const MarkableTextElement: FunctionComponent<MarkableTextElementProps> = 
 		openAnnotationCallback(data.annotations.slice(0, data.annotations.length - 1));
 	};
 
-	const [annotationClass, annotationHeight, _] = useAnnotationState(data.annotations[0]);
+	const [annotationClass, annotationHeight, _, __] = useAnnotationState(data.annotations[0]);
 
 	const content = <span contentEditable={editMode} suppressContentEditableWarning={true}
 				data-key={data.key} onInput={inputCallback} onPointerUp={ highlightHandler } onClick={hoverCallback}
