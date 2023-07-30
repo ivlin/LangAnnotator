@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useCallback } from 'react';
+import React, { FunctionComponent, useState, useCallback, useEffect } from 'react';
 import { useKeyPress } from './ShortcutHandler';
 import { Color, Annotation, useAnnotationState } from './MarkableTextElement';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
@@ -41,10 +41,10 @@ type AnnotationPanelProps = {
 export const AnnotationTabTitle: FunctionComponent<AnnotationTabTitleProps> = (props) => {
 	const { annotation } = props;
 	const [annotationClass, _annotationHeight, label, _setAnnotationClass] = useAnnotationState(annotation);
-	return (<> 
+	return (<div className="annotationTabLabel"> 
 				<button className="colorButton" style={{backgroundColor: annotation.annotationClass}}></button>
-				<span> { label }</span>
-			</>);
+				<span> { annotation.label }</span>
+			</div>);
 }
 
 export const AnnotationManager: FunctionComponent<AnnotationManagerProps> = (props) => {
@@ -53,7 +53,7 @@ export const AnnotationManager: FunctionComponent<AnnotationManagerProps> = (pro
 	useKeyPress(["Escape"], hideAnnotationHandler)
 
 	return (<div className="modalBackground">
-				<Tabs>
+				<Tabs className="modalTabs">
 				<TabList>
 					{ annotations.map((ann, ind) => 
 						<Tab key={ind}> 
@@ -88,6 +88,7 @@ export const AnnotationPanel: FunctionComponent<AnnotationPanelProps> = (props) 
 		setAnnotationLabelCallback((ev.target as HTMLInputElement).innerText);
 	};
 	const commentUpdate = (ev: React.SyntheticEvent) => {
+		console.log("update")
 		annotation.comment = (ev.target as HTMLInputElement).innerText;
 	};
 
@@ -98,18 +99,21 @@ export const AnnotationPanel: FunctionComponent<AnnotationPanelProps> = (props) 
 				<ColorPalette updateHandler={setAnnotationClassCallback} selected={annotationClass} />
   				<br />
   				<div style={{display: "flex", flexDirection: "row"}}>
-  					<div> Title: </div>			
-					<div style={{border: "1px solid black", whiteSpace: "pre-line"}}
-						contentEditable suppressContentEditableWarning onInput={labelUpdate}>
-						{annotation.label}
+  					<div className="annotationInputDiv"
+						contentEditable suppressContentEditableWarning onBlur={labelUpdate}>
+							<i>
+								{annotation.label}
+							</i>
 					</div>	
 				</div>
-				<div style={{border: "1px solid black", whiteSpace: "pre-line"}}
-					contentEditable suppressContentEditableWarning onInput={commentUpdate}>
+				<div className="annotationInputDiv"
+					contentEditable suppressContentEditableWarning onBlur={commentUpdate}>
 					{annotation.comment}
 				</div>
-				<div className="buttonHighlighting" style={{padding: "15px"}} onClick={() => deleteHandler(annotation)}>
-					<i className="fa fa-trash fa-lg"></i>
+				<div className="annotationOptions">
+					<div className="buttonHighlighting" style={{padding: "15px"}} onClick={() => deleteHandler(annotation)}>
+						<i className="fa fa-trash fa-lg"></i>
+					</div>
 				</div>
 			</div>
 }

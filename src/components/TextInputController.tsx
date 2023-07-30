@@ -3,14 +3,10 @@ import React, { FunctionComponent, useCallback, useRef } from 'react';
 
 type TextInputControllerProp = {
 	appendHandler: (suffix: string) => void,
-	editMode: boolean,
-	toggleEditModeHandler: () => void,
-	toggleConfigModal: () => void,
-	toggleHelpModal: () => void
 }
 
 export const TextInputController: FunctionComponent<TextInputControllerProp> = (props) => {
-	const { appendHandler, editMode, toggleEditModeHandler, toggleConfigModal, toggleHelpModal } = props;
+	const { appendHandler } = props;
 	const inputRef = useRef(null);
 	const submitCallback = (event: React.FormEvent) => {
 		event.preventDefault();
@@ -22,23 +18,9 @@ export const TextInputController: FunctionComponent<TextInputControllerProp> = (
 	return (
 		<div className="topnav">
 			<form className="appendContainer">
-				<input type="text" ref={inputRef} placeholder={"Append new notes or edit existing ones directly below"} />
-				<button className="button" type="submit" onClick={submitCallback}><i className="fa fa-plus fa-lg"></i></button>
+				<input type="text" autoFocus ref={inputRef} placeholder={"Append new notes or edit existing ones directly below"} />
+				<button className="button" type="submit" onClick={submitCallback}><i className="fa fa-arrow-right fa-lg"></i></button>
 			</form>
-			<div className="optionListContainer">
-				<button className={`${!editMode && "active"} button buttonHighlighting`} onClick={toggleEditModeHandler}>
-					<i className="fa fa-magic fa-lg"></i>
-				</button>
-				<button className={`${editMode && "active"} button buttonHighlighting`} onClick={toggleEditModeHandler}>
-					<i className="fa fa-edit fa-lg"></i>
-				</button>
-				<button className="button buttonHighlighting" onClick={toggleConfigModal}>
-					<i className="fa fa-cog fa-lg"></i>
-				</button>
-				<button className="button buttonHighlighting" onClick={toggleHelpModal}>
-					<i className="fa fa-question fa-lg"></i>
-				</button>
-			</div>
 		</div>
 		);		
 }

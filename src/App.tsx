@@ -9,6 +9,7 @@ import { TopNavigator } from './components/TopNavigator';
 import { ConfigModal } from './components/ConfigModal';
 import { HelpModal } from './components/HelpModal';
 import { AppState } from './utils/DataExport';
+import {OptionsMenu } from "./components/OptionsMenu"
 import { getContentItemKey } from './utils/KeyGlobals';
 
 function getAnnotationByKey(items: MarkableTextItem[], key: string) {
@@ -39,6 +40,7 @@ function App() {
   // Callbacks
   // Create a new element
   const appendContent = useCallback((suffix: string) => {
+    if (content.length > 0) { suffix = "\n" + suffix }
     // Merge into previous
     if (content.length > 0 && content[content.length - 1].annotations.length == 1) {
       content[content.length - 1].content += suffix;
@@ -58,12 +60,12 @@ function App() {
   const deleteAnnotationHandler = useCallback((deleted: Annotation) => {
     const reducedContents: MarkableTextItem[] = [];
     content.forEach(item => {
+      item.annotations = item.annotations.filter(annotation => annotation !== deleted);
+
       if (reducedContents.length == 0) {
         reducedContents.push(item);
         return;
       }
-      // Check for a merge
-      item.annotations = item.annotations.filter(annotation => annotation !== deleted);
 
       const canMerge = hasMatchingAnnotations(item.annotations, 
         reducedContents[reducedContents.length - 1].annotations);
@@ -151,7 +153,8 @@ function App() {
     setContent(appState.content);
   }, [content]);
 
-  const toggleEditModeCallback = useCallback(() => setEditMode(!editMode), [editMode]);
+  const toggleHighlightModeCallback = useCallback(() => setEditMode(false), [editMode]);
+  const toggleEditModeCallback = useCallback(() => setEditMode(true), [editMode]);
   const toggleConfigVisibility = useCallback(() => setConfigVisibility(!configVisibility), [configVisibility])
   const toggleHelpVisibility = useCallback(() => setHelpVisibility(!helpVisibility), [helpVisibility]);
   const hideAnnotationCallback = useCallback(() => setModalAnnotations([]), [modalAnnotations]);
@@ -161,13 +164,15 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <TextInputController appendHandler={appendContent} editMode={editMode} 
-          toggleEditModeHandler={toggleEditModeCallback} toggleConfigModal={toggleConfigVisibility} 
-          toggleHelpModal={toggleHelpVisibility} />
-        <div className="modeDescriptor">{ editMode ? "Mode: Edit" : "Mode: Highlight" }</div>
+        <OptionsMenu editMode={editMode} 
+          toggleHighlightModeCallback={toggleHighlightModeCallback}
+          toggleEditModeCallback={toggleEditModeCallback} 
+          toggleConfigVisibility={toggleConfigVisibility} 
+          toggleHelpVisibility={toggleHelpVisibility} />
       </header>
       <div className="App-body">
         <TextDisplay content={content} openAnnotationCallback={openAnnotationCallback} highlightCallback={splitContent} editMode={editMode} />
+        <TextInputController appendHandler={appendContent} />
         { modalAnnotations.length > 0 && <AnnotationManager annotations={modalAnnotations} 
             hideAnnotationHandler={hideAnnotationCallback}
             deleteHandler={deleteAnnotationHandler} /> }

@@ -18,11 +18,14 @@ export enum Color {
 
 type AnnotationSubscriber = (color: Color, height: number, label: string) => void;
 
-export function useAnnotationState(annotation: Annotation): [Color, number, string, (color: Color, height: number, label: string) => void] {	
-	const [hookState, setHookState] = useState("");
+export function useAnnotationState(annotation: Annotation): [Color, number, string, AnnotationSubscriber] {	
+	const [colorState, setColorState] = useState("");
+	const [labelState, setLabelState] = useState("");
 	
-	function refreshHook(color: Color) {
-		setHookState(color);
+	function refreshHook(color: Color, _height: number, label: string) {
+		console.log("refreshhook")
+		setColorState(color);
+		setLabelState(label);
 	}
 
 	useEffect(() => {
@@ -48,11 +51,11 @@ export class Annotation {
 	key: string;
 	annotationHeight: number;
 
-	constructor(annotationClass: Color, annotationHeight: number, label?: string, comment?: string) {
+	constructor(annotationClass: Color, annotationHeight: number, label: string, comment?: string) {
 		this.annotationClass = annotationClass;
 		this.annotationHeight = annotationHeight;
 		this.key = getAnnotationKey();
-		this.label = label ? label : "TEST LABEL";
+		this.label = label ? label : "Title";
 		this.comment = comment ? comment : "";
 		this.subscribers = new Array<AnnotationSubscriber>();
 	}
@@ -69,6 +72,7 @@ export class Annotation {
 		this.annotationClass = annotationClass;
 		this.label = label;
 		this.annotationHeight = annotationHeight;
+		console.log("Updating annotation state", this.annotationClass, this.label)
 		this.subscribers.forEach((fn: AnnotationSubscriber) => fn(this.annotationClass, this.annotationHeight, this.label));
 	}
 }
